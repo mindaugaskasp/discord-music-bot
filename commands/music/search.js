@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const Youtube = require('../../helpers/integrations/youtube');
 
 module.exports = class SearchCommand extends Command {
     constructor(client) {
@@ -10,9 +11,10 @@ module.exports = class SearchCommand extends Command {
             examples: ['search daft punk get lucky'],
             guildOnly: true,
         });
+        this.youtube = new Youtube(client.config.youtube.token, client.config.youtube.base_url);
     }
 
     run(msg) {
-        return msg.say('Hi, I will play music soon.');
+        return msg.say('Hi, I will search music soon.');
     }
 };

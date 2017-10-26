@@ -7,11 +7,8 @@
     ],
     "default_cmd_prefix": "."
   },
-  "integrations": {
-    "youtube": {
-      "token": "",
-      "base_url": "https://www.youtube.com",
-      "stream_quality": "highest"
-    }
+  "youtube": {
+    "token": "",
+    "base_url": "https://www.youtube.com",
   }
 }
