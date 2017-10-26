@@ -1,0 +1,46 @@
+{
+  "name": "discord-music-bot",
+  "version": "1.0.0",
+  "description": "Discord music bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mindaugaskasp/discord-music-bot.git"
+  },
+  "keywords": [
+    "discord",
+    "music",
+    "bot",
+    "voip",
+    "commando",
+    "mit",
+    "open",
+    "source",
+    "guide",
+    "bot",
+    "how",
+    "to",
+    "do",
+    "code"
+  ],
+  "author": "Mindaugas Kasparavičius",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mindaugaskasp/discord-music-bot/issues"
+  },
+  "homepage": "https://github.com/mindaugaskasp/discord-music-bot#readme",
+  "dependencies": {
+    "bufferutil": "^3.0.2",
+    "discord.js": "^11.2.1",
+    "discord.js-commando": "^0.9.0",
+    "node-opus": "^0.2.7",
+    "uws": "^8.14.1",
+    "ytdl-core": "^0.16.2",
+    "validator": "^7.0.0",
+    "promised-io": "^0.3.5",
+    "superagent": "^3.5.2"
+  }
+}
