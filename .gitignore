@@ -62,3 +62,6 @@ typings/
 
 # general project files
 .downloads
+
+$config files
+configs/*
