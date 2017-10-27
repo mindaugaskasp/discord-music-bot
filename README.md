@@ -25,3 +25,23 @@ Out of the box you get:
 3. Run `docker-compose build` to build server container
 4. Run `docker-compose run` to run container
 5. (Optional): Run `docker-compose down` to shut down container instance. Refer to docker-compose manual for more info on docker command usage.
+
+## User Guide
+
+* Use command `<prefix>join` to make bot join voice channel you're currently in.
+* Use command `<prefix>leave` to make bot leave voice channel.
+* Use command `<prefix>search [query]` to search for music, where `[query]` is either a search text, e.g.: `daft punk get lucky` or a youtube link.
+* Use command `<prefix>pick [choices]` to pick what song(s) to add from `search` command. The prompt to do so will be displayed after successful search attempt. `[choices]` is either a list of song numbers separated by commas, e.g. `1,2,3` or keywoord `all` to indicate that you want to pick all tracks.
+* Use command `<prefix>play` to play what is saved in music player queue.
+* Use command `<prefix>remove [songNumber]` to remove a song from music player queue, where `[songNumber]` is a valid song number between `1 - list length`. Song number `0` indicates that you want to delete `ALL` songs in playlist. 
+* Use command `<prefix>view` to view music player queue.
+* Use command `<prefix>pause` to pause currently playing voice stream.
+* Use command `<prefix>resume` to resume paused voice stream.
+* Use command `<prefix>stop` to stop music playback altogether.
+* Use command `<prefix>skip` to skip music player to the next song if available.
+* Use command `<prefix>Jump` to jump music player to specific song.
+* Use command `<prefix>prefix [char]` to view bot prefix or set one by passing a single or series of characters which will be set as custom bot prefix for particular guild.
+* Use command `<prefix>help [command]` to view general command info or information regarding certain command by supplying a command name, e.g. either `<prefix>help` or `<prefix>help play` will suffice.
+* Use command `<prefix>ping` to check bot / discord api latency
+
+`<prefix>` indicates a bot command prefix set in `configs/app.json` file.
