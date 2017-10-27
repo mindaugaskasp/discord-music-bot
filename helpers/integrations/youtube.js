@@ -19,7 +19,6 @@ module.exports = class Youtube
     {
         let deferred = promise.defer();
         let requestUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${escape(query)}&key=${this.token}&type=video`;
-        console.log(requestUrl);
         request(requestUrl, async (error, response) => {
             if (response.statusCode === 200) {
                 let formatted = [];

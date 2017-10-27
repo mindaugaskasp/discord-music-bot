@@ -13,6 +13,18 @@ module.exports = class MusicPlayer extends EventEmitter
     }
 
     /**
+     *
+     * @param guild
+     * @returns {*}
+     */
+    getMusicQueue(guild)
+    {
+        let queue = this._queue.get(guild.id);
+        if (queue) return queue.tracks;
+        return null;
+    }
+
+    /**
      * @param guild
      * @returns {*}
      */
@@ -66,12 +78,12 @@ module.exports = class MusicPlayer extends EventEmitter
             this._queue.set(guild.id, queue);
             this.emit('remove', `Removing \`ALL\` tracks from the queue. Total: \`${queue.tracks.length}\``, guild);
         } else {
-            if (position > queue.tracks.length-1) return this.emit('remove', `Invalid track number provided. Allowed: 0-${queue.tracks.length}`, guild);
-            let firstHalf = queue.tracks.splice(0, position - 1);
-            let secondHalf = queue.tracks.splice(position-1, queue.tracks.length);
+            if (position-1 >= queue.tracks.length) return this.emit('remove', `Invalid track number provided. Allowed: 1-${queue.tracks.length}`, guild);
+            this.emit('remove', `Removing \`${queue.tracks[position-1].title}\` from the queue.`, guild);
+            let firstHalf = position - 1 === 0 ? [] : queue.tracks.splice(0, position - 1);
+            let secondHalf = queue.tracks.splice(position-1 === 0 ? position : position-1, queue.tracks.length);
             queue.tracks = firstHalf.concat(secondHalf);
             this._queue.set(guild.id, queue);
-            this.emit('remove', `Removing \`${queue.tracks[position-1].title}\` from the queue.`, guild);
         }
     }
 
@@ -108,7 +120,6 @@ module.exports = class MusicPlayer extends EventEmitter
     }
 
     /**
-     * TODO test this
      * @param guild
      */
     pause(guild)
@@ -121,7 +132,6 @@ module.exports = class MusicPlayer extends EventEmitter
     }
 
     /**
-     * TODO test this
      * @param guild
      */
     resume(guild)
@@ -134,7 +144,6 @@ module.exports = class MusicPlayer extends EventEmitter
     }
 
     /**
-     * TODO test this
      * @param guild
      */
     skip(guild)
@@ -173,7 +182,7 @@ module.exports = class MusicPlayer extends EventEmitter
     jump(guild, position)
     {
         let connection = guild.voiceConnection;
-        let state = this._state(guild.id);
+        let state = this._state.get(guild.id);
         let queue = this._queue.get(guild.id);
         if (connection && connection.dispatcher) {
             if (queue.tracks.length === 0 || queue.tracks.length < position-1)
@@ -187,7 +196,6 @@ module.exports = class MusicPlayer extends EventEmitter
     }
 
     /**
-     * TODO test this
      * @param guild
      */
     stop(guild)

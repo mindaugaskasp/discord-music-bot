@@ -19,7 +19,6 @@ module.exports = class ResumeCommand extends Command {
     }
 
     /**
-     *
      * @param msg
      * @returns {Promise.<Message|Message[]>}
      */
