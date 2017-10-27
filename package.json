@@ -37,10 +37,10 @@
     "discord.js": "^11.2.1",
     "discord.js-commando": "^0.9.0",
     "node-opus": "^0.2.7",
-    "uws": "^8.14.1",
-    "ytdl-core": "^0.16.2",
-    "validator": "^7.0.0",
     "promised-io": "^0.3.5",
-    "superagent": "^3.5.2"
+    "sqlite": "^2.8.0",
+    "superagent": "^3.5.2",
+    "uws": "^8.14.1",
+    "ytdl-core": "^0.16.2"
   }
 }

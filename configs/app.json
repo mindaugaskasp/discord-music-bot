@@ -1,14 +1,14 @@
 {
   "bot": {
-    "name": "",
-    "token": "",
+    "name": "Music",
+    "token": "MzczMTE0NjE3NzIwODY0NzY5.DNODVw.D45-zBPkxwx8I7QiqT6jjTLhcTA",
     "owners": [
-
+        "218044530635702274"
     ],
     "default_cmd_prefix": "."
   },
   "youtube": {
-    "token": "",
-    "base_url": "https://www.youtube.com",
+    "token": "AIzaSyBMW90yVK2vCZcFkbt6qzLKzZ0Ivbp6qbA",
+    "base_url": "https://www.youtube.com"
   }
 }

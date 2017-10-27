@@ -9,11 +9,17 @@ module.exports = class Youtube
         this.base_url = base_url;
     }
 
+    /**
+     *
+     * @param query
+     * @param results
+     * @returns {Promise.<Promise|PromiseConstructor>}
+     */
     async search(query, results = 50)
     {
         let deferred = promise.defer();
-
-        let requestUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet,contentDetails&q=${escape(query)}&key=${this.token}&type=video`;
+        let requestUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${escape(query)}&key=${this.token}&type=video`;
+        console.log(requestUrl);
         request(requestUrl, async (error, response) => {
             if (response.statusCode === 200) {
                 let formatted = [];
@@ -21,10 +27,11 @@ module.exports = class Youtube
                 for (let track of sliced) {
                     formatted.push(
                         {
-                            title: '',
-                            author: '',
-                            description: '',
-                            url: `${this.base_url}/watch?v=${track.contentDetails.videoId}`
+                            title: track.snippet.title,
+                            source: `Music queue`,
+                            image: track.snippet.thumbnails.default.url,
+                            description: track.snippet.description,
+                            url: `${this.base_url}/watch?v=${track.id.videoId}`
                         }
                     )
                 }
