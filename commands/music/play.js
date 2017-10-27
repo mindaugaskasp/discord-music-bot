@@ -67,13 +67,11 @@ module.exports = class PlayCommand extends Command {
      */
     _getPlayingEmbed(track)
     {
-        console.log(track);
         let embed = new Discord.RichEmbed();
-
         embed
             .setAuthor(`Playing - 🎵 ${track.title} 🎵`, track.image, track.url)
             .setColor('RANDOM')
-            .addField('Song Number', `${track.position+1} / ${track.queue.length}`, true)
+            .addField('Song Number', `${track.position+1} / ${track.total}`, true)
             .addField('Source', `${track.source}`, true)
             .setTimestamp();
 

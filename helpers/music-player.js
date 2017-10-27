@@ -23,7 +23,6 @@ module.exports = class MusicPlayer extends EventEmitter
         let state = this._state.get(guild.id);
         if (!state) state = this._initState(guild.id);
 
-        console.log(queue);
         if (!queue || !queue.tracks || queue.tracks.length === 0) return this.emit('info', 'Queue for given guild is empty.', guild);
         if (!connection) return this.emit('info', 'Not connected to voice channel for given guild.', guild);
 
@@ -32,7 +31,7 @@ module.exports = class MusicPlayer extends EventEmitter
 
         let track = queue.tracks[queue.position];
         track['position'] = queue.position;
-        track['queue'] = {length: queue.length};
+        track['total'] = queue.tracks.length;
 
         let stream = ytdl(track.url, {filter: 'audioonly', quality: 'lowest'});
         let dispatcher = connection.playStream(stream, {passes: state.passes, volume: state.volume, seek: state.seek});
@@ -44,7 +43,6 @@ module.exports = class MusicPlayer extends EventEmitter
 
         dispatcher.on('start', () => {
             console.log(`Playback start for ${guild.id}/${guild.name} [${track.title} - ${track.url}]`);
-            // playing text goes here
             this.emit('playing', track, guild);
         });
 
@@ -110,17 +108,16 @@ module.exports = class MusicPlayer extends EventEmitter
      */
     loadTracks(tracks, guild)
     {
-        console.log(tracks);
         if (Array.isArray(tracks) === false) throw 'Tracks must be contained in array';
 
         let queue = this._queue.get(guild.id);
         if (!queue) queue = this._getDefaultQueueObject(guild.id);
 
-        this._queue.set(guild.id, queue.tracks.concat(tracks));
+        queue.tracks = queue.tracks.concat(tracks);
+        this._queue.set(guild.id, queue);
     }
 
     /**
-     *
      * @param guildID
      * @private
      */

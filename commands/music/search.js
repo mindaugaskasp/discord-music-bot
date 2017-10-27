@@ -40,7 +40,7 @@ module.exports = class SearchCommand extends Command {
             (await msg.say(`${results.length} result(s) have been found!`)).delete(10000);
             this.client.music.searches.set(msg.guild.id, results);
 
-            let text = 'Select song(s) to be added from by using command `select` and specifying song number(s) as an argument. E.g. select 1,2 or just select, or select all 1.\n';
+            let text = 'Select song(s) to be added to music queue by using command `select` and specifying song number(s) as an argument. E.g. select 1,2 or select all 1.\n\n';
             let counter = 1;
             for (let track of results) text += `${counter++}. ${track.title} - ${track.url}\n`
             return (await msg.say(text, {code: 'python'})).delete(60000);

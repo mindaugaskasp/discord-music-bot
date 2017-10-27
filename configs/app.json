@@ -5,7 +5,9 @@
     "owners": [
         "218044530635702274"
     ],
-    "default_cmd_prefix": "."
+    "deleteCommandMessages": true,
+    "default_cmd_prefix": ".",
+    "game": "use help command"
   },
   "youtube": {
     "token": "AIzaSyBMW90yVK2vCZcFkbt6qzLKzZ0Ivbp6qbA",

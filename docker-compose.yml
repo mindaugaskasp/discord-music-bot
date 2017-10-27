@@ -1,0 +1,15 @@
+version: '2'
+services:
+    server:
+      container_name: discord_music_server
+      build:
+        context: .
+        dockerfile: ./Dockerfile
+      ports:
+        - 8060:8080
+      volumes:
+        - ./:/usr/src/app
+      restart: always
+      environment:
+        PORT: 8080
+      entrypoint: ["npm", "run", "prod"]

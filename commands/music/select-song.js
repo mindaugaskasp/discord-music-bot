@@ -16,7 +16,7 @@ module.exports = class SelectSongCommand extends Command {
             group: 'music',
             memberName: 'select',
             description: 'Selects which song(s) should be added to player',
-            examples: ['select 1', 'select 1,2'],
+            examples: ['select 1', 'select 1,2', 'select all'],
             guildOnly: true,
             args: [{
                 key: 'selection',
@@ -40,8 +40,6 @@ module.exports = class SelectSongCommand extends Command {
                 addedToQueue = searches.length;
             } else {
                 let selection = args.selection.match(/\d+/g);
-                console.log(selection);
-
                 for (let index = 0; index < searches.length; index++)
                     for (let selectedIndex of selection)
                         if (parseInt(selectedIndex) === index+1) {
