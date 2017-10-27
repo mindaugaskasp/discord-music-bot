@@ -9,7 +9,7 @@ module.exports = class PlayCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'play',
-            aliases: ['listen', 'queue'],
+            aliases: ['listen', 'stream'],
             group: 'music',
             memberName: 'play',
             description: 'Plays loaded queue',
@@ -42,10 +42,8 @@ module.exports = class PlayCommand extends Command {
     {
         let playingMessage = null;
         this.client.music.on('playing', (track, guild) => {
-            console.log(track);
             // makes sure to delete previous playing embed message before sending a new one
             if (playingMessage) playingMessage.delete();
-
             let channel = guild.channels.find('type', 'text');
             if (channel) playingMessage = channel.send('', {embed: this._getPlayingEmbed(track)});
             else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)

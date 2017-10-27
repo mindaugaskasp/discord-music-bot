@@ -19,13 +19,13 @@ module.exports = class PlayCommand extends Command {
      * @param msg
      * @returns {Promise.<Message|Message[]>}
      */
-    run(msg) {
+    async run(msg) {
         try {
             let guild = msg.guild;
 
-            if (!guild.voiceConnection) return msg.send('I am not in any voice channel at the moment.');
+            if (!guild.voiceConnection) return (await msg.send('I am not in any voice channel at the moment.')).delete(12000);
             else {
-                msg.say(`Leaving Voice Channel - \`${guild.voiceConnection.channel.name}\``);
+                (await msg.say(`Leaving Voice Channel - \`${guild.voiceConnection.channel.name}\``)).delete(12000);
                 guild.voiceConnection.channel.leave()
             }
         } catch (e) {

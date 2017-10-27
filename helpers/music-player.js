@@ -39,9 +39,15 @@ module.exports = class MusicPlayer extends EventEmitter
         if (queue.queue_end_reached === true && state.loop === true) {
             this._resetQueuePosition(guild.id);
             track = queue.tracks[0];
-        } else if (queue.queue_end_reached === true && state.loop === false) return this.emit('info', 'Music has finished playing for given guild. Looping is not enabled', guild);
+        } else if (queue.queue_end_reached === true && state.loop === false)
+            return this.emit('info', 'Music has finished playing for given guild. Looping is not enabled.', guild);
 
         dispatcher.on('start', () => {
+            // resetting state data during playback
+            state.seek = 0;
+            state.increment_queue = true;
+            this._state.set(guild.id, state);
+
             console.log(`Playback start for ${guild.id}/${guild.name} [${track.title} - ${track.url}]`);
             this.emit('playing', track, guild);
         });
@@ -49,41 +55,107 @@ module.exports = class MusicPlayer extends EventEmitter
         dispatcher.on('end', () => {
             console.log(`Playback over for ${guild.id}/${guild.name} [${track.title} - ${track.url}]`);
             this._incrementQueue(guild.id);
-            this.play(guild);
+            if (state.stop === false) this.play(guild);
+            else this._initState(guild);
         });
 
         state.currently_playing = false;
         this._state.set(guild.id, state);
     }
 
+    /**
+     * TODO test this
+     * @param guild
+     */
     pause(guild)
     {
-        //TODO complete this method
+        let connection = guild.voiceConnection;
+        if (connection && connection.dispatcher && connection.dispatcher.paused === false) {
+            connection.dispatcher.pause();
+            this.emit('info', 'Music Player has been paused', guild)
+        } else  this.emit('info', 'Music Player could not be paused. Player is not connected or is already paused at the moment.', guild)
     }
 
+    /**
+     * TODO test this
+     * @param guild
+     */
     resume(guild)
     {
-        //TODO complete this method
+        let connection = guild.voiceConnection;
+        if (connection && connection.dispatcher && connection.dispatcher.paused === true) {
+            connection.dispatcher.resume();
+            this.emit('info', 'Music Player has been resumed', guild)
+        } else  this.emit('info', 'Music Player could not be resumed. Player is not connected or is not paused at the moment.', guild)
     }
 
+    /**
+     * TODO test this
+     * @param guild
+     */
     skip(guild)
     {
-        //TODO complete this method
+        let connection = guild.voiceConnection;
+        if (connection && connection.dispatcher) {
+            connection.dispatcher.end('skip command initiated');
+            this.emit('info', 'Music player is skipping', guild)
+        } else  this.emit('info', 'Music Player could not skip track at the moment. Player not connected.', guild)
     }
 
-    seek(guild)
+    /**
+     * TODO test this
+     * @param guild
+     * @param timeInSeconds
+     */
+    seek(guild, timeInSeconds)
     {
-        //TODO complete this method
+        let connection = guild.voiceConnection;
+        let state = this._state(guild.id);
+        if (connection && connection.dispatcher) {
+            state.increment_queue = false;
+            state.seek = timeInSeconds;
+            this._state.set(guild.id, state);
+            this.skip(guild);
+            this.emit('info', `Seeking player to \`${timeInSeconds/60}:${timeInSeconds%60}\``, guild);
+        } else this.emit('info', 'Player could not seek. Player not connected or is not playing music at the moment.', guild);
     }
 
-    jump(guild)
+    /**
+     * TODO test this
+     * @param guild
+     * @param position
+     * @returns {Emitter|*}
+     */
+    jump(guild, position)
     {
-        //TODO complete this method
+        let connection = guild.voiceConnection;
+        let state = this._state(guild.id);
+        let queue = this._queue.get(guild.id);
+        if (connection && connection.dispatcher) {
+            if (queue.tracks.length === 0 || queue.tracks.length < position-1)
+                return this.emit('info', `Incorrect song number. Available range [0-${queue.tracks.length}]`);
+
+            this.skip(guild);
+            state.position = position - 2;
+            this._state.set(guild.id, state);
+            this.emit('info', `Player jumping to play track #${position} [${queue.tracks[position-1]}]`, guild);
+        } else this.emit('info', 'Player could jump to specific song. Player not connected or is not playing music at the moment.', guild);
     }
 
+    /**
+     * TODO test this
+     * @param guild
+     */
     stop(guild)
     {
-        //TODO complete this method
+        let state = this._state.get(guild.id);
+        let connection = guild.voiceConnection;
+        if (connection && connection.dispatcher) {
+            state.stop = true;
+            this._state.set(guild.id, state);
+            connection.dispatcher.destroy('skip command initiated');
+            this.emit('info', 'Music player has been stopped.', guild)
+        } else  this.emit('info', 'Music Player could not be stopped. Player not connected.', guild)
     }
 
     /**
@@ -109,6 +181,7 @@ module.exports = class MusicPlayer extends EventEmitter
     loadTracks(tracks, guild)
     {
         if (Array.isArray(tracks) === false) throw 'Tracks must be contained in array';
+        for (let track of tracks) this._validateTrackObject(track);
 
         let queue = this._queue.get(guild.id);
         if (!queue) queue = this._getDefaultQueueObject(guild.id);
@@ -145,7 +218,8 @@ module.exports = class MusicPlayer extends EventEmitter
      */
     _incrementQueue(guildID)
     {
-        let queue = this._queue(guildID);
+        let queue = this._queue.get(guildID);
+        if (!queue) throw 'Can\'t increment queue - map not initialized';
 
         if (queue.position >= queue.tracks.length) queue.queue_end_reached = true;
         queue.position++;
@@ -192,6 +266,8 @@ module.exports = class MusicPlayer extends EventEmitter
     {
         if (!track.title) throw 'Track object must specify track name [track.title]';
         if (!track.url) throw 'Track must specify stream url [track.url]';
+        if (!track.source) throw 'Track must specify stream source [track.source]';
+        if (!track.image) throw 'Track must specify stream image [track.image]';
 
         return true;
     }

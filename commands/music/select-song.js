@@ -12,7 +12,7 @@ module.exports = class SelectSongCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'select',
-            aliases: ['select-song', 'pick', 'take'],
+            aliases: ['select-song', 'pick', 'take', 'choose'],
             group: 'music',
             memberName: 'select',
             description: 'Selects which song(s) should be added to player',
@@ -29,10 +29,10 @@ module.exports = class SelectSongCommand extends Command {
 
     async run(msg, args) {
         try {
-            (await msg.say('Adding track(s) to music queue. Please be patient.')).delete(10000);
+            (await msg.say('Adding track(s) to music queue. Please be patient.')).delete(12000);
 
             let searches = this.client.music.searches.get(msg.guild.id);
-            if (!searches) return msg.say('Please search for songs first. Search stash is empty!');
+            if (!searches) return (await msg.say('Please search for songs first. Search stash is empty!')).delete(12000);
             let addedToQueue = 0;
 
             if (args.selection.toLowerCase() === 'all') {
@@ -48,7 +48,7 @@ module.exports = class SelectSongCommand extends Command {
                         }
             }
 
-            return msg.say(`${addedToQueue} song(s) have been added to queue`);
+            return (await msg.say(`${addedToQueue} song(s) have been added to queue`)).delete(12000);
 
         } catch (e) {
             console.log(e);

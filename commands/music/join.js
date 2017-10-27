@@ -23,7 +23,7 @@ module.exports = class JoinCommand extends Command {
         try {
             let user = msg.member;
             if (!user.voiceChannel) return msg.say('You must join channel first before using this command');
-            else user.voiceChannel.join().then((connection) => msg.say(`Joined Voice Channel - \`${connection.channel.name}\``));
+            else user.voiceChannel.join().then(async (connection) => (await msg.say(`Joined Voice Channel - \`${connection.channel.name}\``)).delete(12000));
 
         } catch (e) {
             console.log(e);
