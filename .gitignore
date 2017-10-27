@@ -65,6 +65,3 @@ typings/
 
 $config files
 configs/*
-
-#database
-sqlite/*

@@ -15,4 +15,4 @@ Out of the box you get:
 3. Open terminal and change working directory to project root (e.g. cd `<projectRoot>`)
 4. In terminal run `node index.js` - which basically will start serving your main (index.js) file to the server.
 5. Add bot to your guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID
-6. Use command `<prefix>help` to view commands available, <prefix> is custom command prefix you can set in `configs/app.json` file. All commands must start by declaring the prefix first. E.g. If we have default prefix set as `!` then all commands would proceed with it and be initiated like so `!help` or `!join` etc. 
+6. Use command `<prefix>help` to view commands available, `<prefix>` is custom command prefix you can set in `configs/app.json` file. All commands must start by declaring the prefix first. E.g. If we have default prefix set as `!` then all commands would proceed with it and be initiated like so `!help` or `!join` etc. 
