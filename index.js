@@ -44,5 +44,5 @@ client.on('commandRun', (cmd, promise, msg, args) => {
     } else if (channel.permissionsFor(client.user).has('MANAGE_MESSAGES') === false){
         console.log(`Missing Permission MANAGE_MESSAGES for Guild ${msg.guild.id}/${msg.guild.name}`);
     }
-    console.log('info', `Command issued ${cmd.name} [${msg.guild.name}]`);
+    console.log(`Command init ${cmd.name} - ${msg.guild.id}/${msg.guild.name}`);
 });

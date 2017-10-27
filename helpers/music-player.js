@@ -1,5 +1,6 @@
 const EventEmitter = require('events');
 const ytdl = require('ytdl-core');
+const promise = require('promised-io/promise');
 
 module.exports = class MusicPlayer extends EventEmitter
 {
@@ -12,35 +13,79 @@ module.exports = class MusicPlayer extends EventEmitter
     }
 
     /**
-     *
      * @param guild
      * @returns {*}
      */
-    play(guild)
+    async play(guild)
     {
         let queue = this._queue.get(guild.id);
         let connection = guild.voiceConnection;
         let state = this._state.get(guild.id);
         if (!state) state = this._initState(guild.id);
 
-        if (!queue || !queue.tracks || queue.tracks.length === 0) return this.emit('info', 'Queue for given guild is empty.', guild);
-        if (!connection) return this.emit('info', 'Not connected to voice channel for given guild.', guild);
+        if (!queue || !queue.tracks || queue.tracks.length === 0) return this.emit('play', 'Queue for given guild is empty.', guild);
+        if (!connection) return this.emit('play', 'Not connected to voice channel for given guild.', guild);
 
-        state.currently_playing = true;
-        this._state.set(guild.id, state);
+        if (queue.queue_end_reached === true && state.loop === true) {
+            this._resetQueuePosition(guild.id);
+        } else if (queue.queue_end_reached === true && state.loop === false)
+            return this.emit('play', 'Music has finished playing for given guild. Looping is not enabled.', guild);
 
         let track = queue.tracks[queue.position];
         track['position'] = queue.position;
         track['total'] = queue.tracks.length;
 
+        console.log('Playing', track);
+
         let stream = ytdl(track.url, {filter: 'audioonly', quality: 'lowest'});
         let dispatcher = connection.playStream(stream, {passes: state.passes, volume: state.volume, seek: state.seek});
 
-        if (queue.queue_end_reached === true && state.loop === true) {
-            this._resetQueuePosition(guild.id);
-            track = queue.tracks[0];
-        } else if (queue.queue_end_reached === true && state.loop === false)
-            return this.emit('info', 'Music has finished playing for given guild. Looping is not enabled.', guild);
+        state.currently_playing = true;
+        this._state.set(guild.id, state);
+
+        await this._attachListeners(dispatcher, state, guild, track);
+        if (state.stop === false) {
+            state.currently_playing = false;
+            this._state.set(guild.id, state);
+            return this.play(guild);
+        } else this._initState(guild);
+        return null;
+    }
+
+    /**
+     *
+     * @param guild
+     * @param position
+     */
+    removeTrack(guild, position)
+    {
+        let queue = this._queue.get(guild.id);
+        if (position === 0) {
+            queue.position = 0;
+            queue.tracks = [];
+            this._queue.set(guild.id, queue);
+            this.emit('remove', `Removing \`ALL\` tracks from the queue. Total: \`${queue.tracks.length}\``, guild);
+        } else {
+            if (position > queue.tracks.length-1) return this.emit('remove', `Invalid track number provided. Allowed: 0-${queue.tracks.length}`, guild);
+            let firstHalf = queue.tracks.splice(0, position - 1);
+            let secondHalf = queue.tracks.splice(position-1, queue.tracks.length);
+            queue.tracks = firstHalf.concat(secondHalf);
+            this._queue.set(guild.id, queue);
+            this.emit('remove', `Removing \`${queue.tracks[position-1].title}\` from the queue.`, guild);
+        }
+    }
+
+    /**
+     * @param dispatcher
+     * @param state
+     * @param guild
+     * @param track
+     * @returns {PromiseConstructor | Promise}
+     * @private
+     */
+    _attachListeners(dispatcher, state, guild, track)
+    {
+        let deferred = promise.defer();
 
         dispatcher.on('start', () => {
             // resetting state data during playback
@@ -48,19 +93,18 @@ module.exports = class MusicPlayer extends EventEmitter
             state.increment_queue = true;
             this._state.set(guild.id, state);
 
-            console.log(`Playback start for ${guild.id}/${guild.name} [${track.title} - ${track.url}]`);
             this.emit('playing', track, guild);
         });
 
-        dispatcher.on('end', () => {
-            console.log(`Playback over for ${guild.id}/${guild.name} [${track.title} - ${track.url}]`);
+        dispatcher.on('end', (reason) => {
+            console.log(reason);
             this._incrementQueue(guild.id);
-            if (state.stop === false) this.play(guild);
-            else this._initState(guild);
+            deferred.resolve(dispatcher);
         });
 
-        state.currently_playing = false;
-        this._state.set(guild.id, state);
+        dispatcher.on('error', e => deferred.reject(e));
+
+        return deferred.promise;
     }
 
     /**
@@ -72,8 +116,8 @@ module.exports = class MusicPlayer extends EventEmitter
         let connection = guild.voiceConnection;
         if (connection && connection.dispatcher && connection.dispatcher.paused === false) {
             connection.dispatcher.pause();
-            this.emit('info', 'Music Player has been paused', guild)
-        } else  this.emit('info', 'Music Player could not be paused. Player is not connected or is already paused at the moment.', guild)
+            this.emit('pause', 'Music Player has been paused', guild)
+        } else  this.emit('pause', 'Music Player could not be paused. Player is not connected or is already paused at the moment.', guild)
     }
 
     /**
@@ -85,8 +129,8 @@ module.exports = class MusicPlayer extends EventEmitter
         let connection = guild.voiceConnection;
         if (connection && connection.dispatcher && connection.dispatcher.paused === true) {
             connection.dispatcher.resume();
-            this.emit('info', 'Music Player has been resumed', guild)
-        } else  this.emit('info', 'Music Player could not be resumed. Player is not connected or is not paused at the moment.', guild)
+            this.emit('resume', 'Music Player has been resumed', guild)
+        } else  this.emit('resume', 'Music Player could not be resumed. Player is not connected or is not paused at the moment.', guild)
     }
 
     /**
@@ -98,8 +142,8 @@ module.exports = class MusicPlayer extends EventEmitter
         let connection = guild.voiceConnection;
         if (connection && connection.dispatcher) {
             connection.dispatcher.end('skip command initiated');
-            this.emit('info', 'Music player is skipping', guild)
-        } else  this.emit('info', 'Music Player could not skip track at the moment. Player not connected.', guild)
+            this.emit('skip', 'Music player is skipping', guild)
+        } else  this.emit('skip', 'Music Player could not skip track at the moment. Player not connected.', guild)
     }
 
     /**
@@ -116,8 +160,8 @@ module.exports = class MusicPlayer extends EventEmitter
             state.seek = timeInSeconds;
             this._state.set(guild.id, state);
             this.skip(guild);
-            this.emit('info', `Seeking player to \`${timeInSeconds/60}:${timeInSeconds%60}\``, guild);
-        } else this.emit('info', 'Player could not seek. Player not connected or is not playing music at the moment.', guild);
+            this.emit('seek', `Seeking player to \`${timeInSeconds/60}:${timeInSeconds%60}\``, guild);
+        } else this.emit('seek', 'Player could not seek. Player not connected or is not playing music at the moment.', guild);
     }
 
     /**
@@ -133,13 +177,13 @@ module.exports = class MusicPlayer extends EventEmitter
         let queue = this._queue.get(guild.id);
         if (connection && connection.dispatcher) {
             if (queue.tracks.length === 0 || queue.tracks.length < position-1)
-                return this.emit('info', `Incorrect song number. Available range [0-${queue.tracks.length}]`);
+                return this.emit('info', `Incorrect song number provided. Allowed 0-${queue.tracks.length}]`);
 
             this.skip(guild);
             state.position = position - 2;
             this._state.set(guild.id, state);
-            this.emit('info', `Player jumping to play track #${position} [${queue.tracks[position-1]}]`, guild);
-        } else this.emit('info', 'Player could jump to specific song. Player not connected or is not playing music at the moment.', guild);
+            this.emit('jump', `Player jumping to play track #${position} [${queue.tracks[position-1]}]`, guild);
+        } else this.emit('jump', 'Player could jump to specific song. Player not connected or is not playing music at the moment.', guild);
     }
 
     /**
@@ -154,8 +198,8 @@ module.exports = class MusicPlayer extends EventEmitter
             state.stop = true;
             this._state.set(guild.id, state);
             connection.dispatcher.destroy('skip command initiated');
-            this.emit('info', 'Music player has been stopped.', guild)
-        } else  this.emit('info', 'Music Player could not be stopped. Player not connected.', guild)
+            this.emit('stop', 'Music player has been stopped.', guild)
+        } else  this.emit('stop', 'Music Player could not be stopped. Player not connected.', guild)
     }
 
     /**
@@ -221,8 +265,8 @@ module.exports = class MusicPlayer extends EventEmitter
         let queue = this._queue.get(guildID);
         if (!queue) throw 'Can\'t increment queue - map not initialized';
 
-        if (queue.position >= queue.tracks.length) queue.queue_end_reached = true;
-        queue.position++;
+        if (queue.position >= queue.tracks.length-1) queue.queue_end_reached = true;
+        else queue.position++;
 
         this._queue.set(guildID, queue);
     }
@@ -234,7 +278,7 @@ module.exports = class MusicPlayer extends EventEmitter
      */
     _resetQueuePosition(guildID)
     {
-        let queue = this._queue(guildID);
+        let queue = this._queue.get(guildID);
         queue.position = 0;
         this._queue.set(guildID, queue);
     }

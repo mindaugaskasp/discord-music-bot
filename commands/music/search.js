@@ -13,7 +13,7 @@ module.exports = class SearchCommand extends Command {
             group: 'music',
             memberName: 'search',
             description: 'Searches for a track in youtube by link or text query',
-            examples: ['search daft punk get lucky'],
+            examples: ['search daft punk get lucky', 'search https://www.youtube.com/watch?v=pSwUztIvlBc'],
             throttling: {
                 usages: 2,
                 duration: 5

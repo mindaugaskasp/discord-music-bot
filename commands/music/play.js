@@ -41,15 +41,15 @@ module.exports = class PlayCommand extends Command {
     _initListeners()
     {
         let playingMessage = null;
-        this.client.music.on('playing', (track, guild) => {
+        this.client.music.on('playing', async (track, guild) => {
             // makes sure to delete previous playing embed message before sending a new one
             if (playingMessage) playingMessage.delete();
             let channel = guild.channels.find('type', 'text');
-            if (channel) playingMessage = channel.send('', {embed: this._getPlayingEmbed(track)});
+            if (channel) playingMessage = (await channel.send('', {embed: this._getPlayingEmbed(track)}));
             else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
         });
 
-        this.client.music.on('info', (text, guild) => {
+        this.client.music.on('play', (text, guild) => {
             let channel = guild.channels.find('type', 'text');
             if (channel) channel.send(text);
             else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
