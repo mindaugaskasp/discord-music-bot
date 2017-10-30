@@ -4,11 +4,15 @@ module.exports = class JoinCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'join',
-            aliases: ['join-channel', 'channel'],
+            aliases: ['join-channel', 'channel', 'voice'],
             group: 'music',
             memberName: 'join',
             description: 'Joins user active voice channel',
             examples: ['join'],
+            throttling: {
+                usages: 2,
+                duration: 5
+            },
             guildOnly: true,
         });
 
@@ -19,10 +23,10 @@ module.exports = class JoinCommand extends Command {
      * @param msg
      * @returns {Promise.<Message|Message[]>}
      */
-    run(msg) {
+    async run(msg) {
         try {
             let user = msg.member;
-            if (!user.voiceChannel) return msg.say('You must join channel first before using this command');
+            if (!user.voiceChannel) return (await msg.say('You must join voice channel first before using this command')).delete(1200);
             else user.voiceChannel.join().then(async (connection) => (await msg.say(`Joined Voice Channel - \`${connection.channel.name}\``)).delete(12000));
 
         } catch (e) {

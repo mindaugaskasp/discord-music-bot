@@ -10,6 +10,4 @@ services:
       volumes:
         - ./:/usr/src/app
       restart: always
-      environment:
-        PORT: 8080
-      entrypoint: ["npm", "run", "prod"]
+      entrypoint: ["npm", "run", "debug"]

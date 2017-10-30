@@ -37,13 +37,13 @@ module.exports = class SearchCommand extends Command {
     async run(msg, args) {
         try {
             let results = await this.youtube.search(args.query);
-            (await msg.say(`${results.length} result(s) have been found!`)).delete(10000);
+            (await msg.say(`_${results.length}_ result(s) have been found!`)).delete(20000);
             this.client.music.searches.set(msg.guild.id, results);
 
             let text = 'Select song(s) to be added to music queue by using command `select` and specifying song number(s) as an argument. E.g. `select 1,2` or `select all`.\n\n';
             let counter = 1;
             for (let track of results) text += `${counter++}. ${track.title} - ${track.url}\n`
-            return (await msg.say(text, {code: 'python'})).delete(60000);
+            return (await msg.say(text, {code: 'python'})).delete(35000);
 
         } catch (e) {
             console.log(e);

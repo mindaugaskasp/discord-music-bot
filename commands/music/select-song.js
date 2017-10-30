@@ -40,6 +40,8 @@ module.exports = class SelectSongCommand extends Command {
                 addedToQueue = searches.length;
             } else {
                 let selection = args.selection.match(/\d+/g);
+                if (!selection) return (await msg.say(`Selection unrecognized: \`${args.selection.toLowerCase()}\`. Allowed: \`ALL\`, \`1\` - \`${searches.length}\``)).delete(15000);
+
                 for (let index = 0; index < searches.length; index++)
                     for (let selectedIndex of selection)
                         if (parseInt(selectedIndex) === index+1) {

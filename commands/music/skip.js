@@ -8,7 +8,7 @@ module.exports = class SkipCommand extends Command {
             group: 'music',
             memberName: 'skip',
             description: 'Skips current track playback',
-            examples: ['skip'],
+            examples: ['skip', 'next'],
             guildOnly: true,
         });
         this.client.music.on('skip', async (text, guild) => {

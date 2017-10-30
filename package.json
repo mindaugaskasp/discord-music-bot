@@ -1,10 +1,11 @@
 {
   "name": "discord-music-bot",
   "version": "1.0.0",
-  "description": "Discord music bot",
+  "description": "Discord music bot based on discord.js & discord.js-commando",
   "main": "index.js",
   "scripts": {
     "prod": "node ./index.js --harmony",
+    "debug": "node --inspect-brk=0.0.0.0:8080 --harmony ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -38,6 +39,7 @@
     "discord.js": "^11.2.1",
     "discord.js-commando": "^0.9.0",
     "node-opus": "^0.2.7",
+    "prism-media": "github:hydrabolt/prism-media",
     "promised-io": "^0.3.5",
     "sqlite": "^2.8.0",
     "superagent": "^3.5.2",
