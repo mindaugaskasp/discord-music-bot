@@ -15,7 +15,6 @@ module.exports = class StashCommand extends Command {
     }
 
     /**
-     *
      * @param msg
      * @returns {Promise.<Message|Message[]>}
      */
@@ -27,7 +26,7 @@ module.exports = class StashCommand extends Command {
                 let str = `Guild - ${msg.guild.name} - Search stash\n\n`;
                 let counter = 1;
                 for (let track of list) str += `${counter++}. ${track.title} \ ${track.url}\n`;
-                return (await msg.say(str, {code: 'node'})).delete(12000);
+                return (await msg.say(str, {code: 'css', split: true})).delete(12000);
             }
         } catch (e) {
             console.log(e);

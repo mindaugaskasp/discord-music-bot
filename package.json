@@ -38,12 +38,15 @@
     "bufferutil": "^3.0.2",
     "discord.js": "^11.2.1",
     "discord.js-commando": "^0.9.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "moment": "^2.19.1",
     "node-opus": "^0.2.7",
     "prism-media": "github:hydrabolt/prism-media",
     "promised-io": "^0.3.5",
     "sqlite": "^2.8.0",
     "superagent": "^3.5.2",
     "uws": "^8.14.1",
+    "validator": "^9.1.1",
     "ytdl-core": "^0.16.2"
   }
 }

@@ -29,6 +29,9 @@ module.exports = class SelectSongCommand extends Command {
 
     async run(msg, args) {
         try {
+            if (this.client.music.getMusicQueue().length >= 500)
+                return (await msg.say('Music player is full. Please remove some of the tracks.')).delete(12000);
+
             (await msg.say('Adding track(s) to music queue. Please be patient.')).delete(12000);
 
             let searches = this.client.music.searches.get(msg.guild.id);

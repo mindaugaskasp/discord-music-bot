@@ -28,7 +28,7 @@ module.exports = class ViewCommand extends Command {
                 let counter = 1;
                 for (let track of list)
                     str += `${counter++}. ${track.title} \ ${track.url}\n`;
-                return (await msg.say(str, {code: 'python'})).delete(12000);
+                return (await msg.say(str, {code: 'python', split: true})).delete(12000);
             }
         } catch (e) {
             console.log(e);

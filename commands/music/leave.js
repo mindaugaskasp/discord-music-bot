@@ -29,7 +29,8 @@ module.exports = class PlayCommand extends Command {
             if (!guild.voiceConnection) return (await msg.send('I am not in any voice channel at the moment.')).delete(12000);
             else {
                 (await msg.say(`Leaving Voice Channel - \`${guild.voiceConnection.channel.name}\``)).delete(12000);
-                guild.voiceConnection.channel.leave()
+                guild.voiceConnection.channel.leave();
+                this.client.music.terminate(msg.guild);
             }
         } catch (e) {
             console.log(e);

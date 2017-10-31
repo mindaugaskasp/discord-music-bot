@@ -4,6 +4,7 @@ const config = require('./configs/app.json');
 const Player = require('./helpers/music-player');
 const sqlite = require('sqlite');
 const TimeArgumentType = require('./arguments/time-argument');
+const Youtube = require('./helpers/integrations/youtube');
 
 sqlite.open(path.join(`${__dirname}/sqlite`, "settings.sqlite3")).then((db) => {
     client.setProvider(new SQLiteProvider(db));
@@ -18,7 +19,7 @@ const client = new CommandoClient({
 
 // custom objects are attached to the client
 client.config = config;
-client.music = new Player();
+client.music = new Player(new Youtube(config.youtube.token, config.youtube.base_url));
 client.db = {
     provider: null,
 };
@@ -59,3 +60,4 @@ client.on('guildCreate', async (guild) => {
         await channel.send(message);
     }
 });
+debugger;

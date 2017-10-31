@@ -36,15 +36,24 @@ module.exports = class SearchCommand extends Command {
      */
     async run(msg, args) {
         try {
+            let indicatorMsg = (await msg.say('Searching for music. Please be patient.'));
+
             let results = await this.youtube.search(args.query);
             (await msg.say(`_${results.length}_ result(s) have been found!`)).delete(20000);
-            this.client.music.searches.set(msg.guild.id, results);
 
-            let text = 'Select song(s) to be added to music queue by using command `select` and specifying song number(s) as an argument. E.g. `select 1,2` or `select all`.\n\n';
-            let counter = 1;
-            for (let track of results) text += `${counter++}. ${track.title} - ${track.url}\n`
-            return (await msg.say(text, {code: 'python'})).delete(35000);
+            indicatorMsg.delete();
 
+            if (results.length > 50 || result.length === 1) {
+                this.client.music.loadTracks(results, msg.guild);
+                return (await msg.say(`${results.length} track(s) have been added to the music queue.`)).delete(12000)
+            } else {
+                this.client.music.searches.set(msg.guild.id, results);
+
+                let text = 'Select song(s) to be added to music queue by using command `select` and specifying song number(s) as an argument. E.g. `select 1,2` or `select all`.\n\n';
+                let counter = 1;
+                for (let track of results) text += `${counter++}. ${track.title} - ${track.url}\n`
+                return (await msg.say(text, {code: 'python'})).delete(35000);
+            }
         } catch (e) {
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.')

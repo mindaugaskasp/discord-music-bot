@@ -70,6 +70,7 @@ module.exports = class PlayCommand extends Command {
             .setAuthor(`Playing - 🎵 ${track.title} 🎵`, track.image, track.url)
             .setColor('RANDOM')
             .addField('Song Number', `${track.position+1} / ${track.total}`, true)
+            .addField('Duration', `${track.duration}`, true)
             .addField('Source', `${track.source}`, true)
             .setTimestamp();
 

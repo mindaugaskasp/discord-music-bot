@@ -14,7 +14,6 @@ class TimeArgumentType extends ArgumentType
     }
 
     /**
-     *
      * @param value
      * @param msg
      * @returns {*}
@@ -22,7 +21,7 @@ class TimeArgumentType extends ArgumentType
     parse(value, msg)
     {
         let split = msg.argString.split(TimeArgumentType.SEP());
-        let hrs, mins, secs = 0;
+        let hrs = 0, mins = 0, secs = 0;
 
         if (split.length === 3) {
             hrs = Math.abs(this._parseInt(split[0]));
@@ -33,14 +32,14 @@ class TimeArgumentType extends ArgumentType
             secs = Math.abs(this._parseInt(split[1]));
         }
 
-        return {
+        return   {
             hours: hrs,
             minutes: mins,
             seconds: secs,
             total : {
                 seconds: hrs * 60 * 60 + mins * 60 + secs
             },
-            text: `${hrs < 0 ? '0' : ''}${hrs}:${mins < 9 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`
+            text: `${hrs < 9 ? '0' : ''}${hrs}:${mins < 9 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`
         };
     }
 
@@ -91,10 +90,6 @@ class TimeArgumentType extends ArgumentType
         return null;
     }
 
-    obtain(msg, val, promptLimit)
-    {
-        return super.obtain(msg, val, promptLimit);
-    }
 }
 
 module.exports = TimeArgumentType;
