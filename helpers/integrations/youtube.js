@@ -50,7 +50,8 @@ module.exports = class Youtube
             image: track.snippet.thumbnails.default.url,
             description: track.snippet.description,
             url: `${this.base_url}/watch?v=${track.id || track.id.videoId}`,
-            duration:`${duration.hours()< 10 ? '0' : ''}${duration.hours()}:${duration.minutes() < 10 ? '0' : ''}${duration.minutes()}:${duration.seconds() < 10 ? '0' : ''}${duration.seconds()}`
+            duration:`${duration.hours()< 10 ? '0' : ''}${duration.hours()}:${duration.minutes() < 10 ? '0' : ''}${duration.minutes()}:${duration.seconds() < 10 ? '0' : ''}${duration.seconds()}`,
+            added_by: null,
         }
     }
 

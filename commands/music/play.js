@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const Discord = require('discord.js');
 
 /**
  * Command responsible for playing whatever is saved in memory for given guild
@@ -45,7 +44,10 @@ module.exports = class PlayCommand extends Command {
             // makes sure to delete previous playing embed message before sending a new one
             if (playingMessage) playingMessage.delete();
             let channel = guild.channels.find('type', 'text');
-            if (channel) playingMessage = (await channel.send('', {embed: this._getPlayingEmbed(track)}));
+            if (channel) {
+                playingMessage = (await channel.send('', {embed: this.client.music.getInfo(guild)}));
+                this.client.music.savePlayerMessage(guild, playingMessage);
+            }
             else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
         });
 
@@ -56,25 +58,6 @@ module.exports = class PlayCommand extends Command {
         });
 
         this.client.music.on('error', text => { throw text; });
-    }
-
-    /**
-     *
-     * @param track
-     * @private
-     */
-    _getPlayingEmbed(track)
-    {
-        let embed = new Discord.RichEmbed();
-        embed
-            .setAuthor(`Playing - 🎵 ${track.title} 🎵`, track.image, track.url)
-            .setColor('RANDOM')
-            .addField('Song Number', `${track.position+1} / ${track.total}`, true)
-            .addField('Duration', `${track.duration}`, true)
-            .addField('Source', `${track.source}`, true)
-            .setTimestamp();
-
-        return embed;
     }
 
 };

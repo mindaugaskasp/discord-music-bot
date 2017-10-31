@@ -125,17 +125,23 @@ module.exports = class BasePlayer extends EventEmitter
      *
      * @param tracks
      * @param guild
+     * @param userID
      */
-    loadTracks(tracks, guild)
+    loadTracks(tracks, guild, userID = null)
     {
         if (Array.isArray(tracks) === false) throw 'Tracks must be contained in array';
-        for (let track of tracks) this._validateTrackObject(track);
+        for (let track of tracks) {
+            this._validateTrackObject(track);
+            track.added_by = userID;
+        }
 
         let queue = this._queue.get(guild.id);
         if (!queue) queue = this._getDefaultQueueObject(guild.id);
 
         queue.tracks = queue.tracks.concat(tracks);
         this._queue.set(guild.id, queue);
+
+        this.emit('update', guild);
     }
 
     /**

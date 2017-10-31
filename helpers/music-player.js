@@ -1,10 +1,23 @@
 const BasePlayer = require('./base-player');
+const Discord = require('discord.js');
 
 module.exports = class MusicPlayer extends BasePlayer
 {
     constructor(youtube)
     {
         super(youtube);
+        this.messages = new Map();
+        this._registerListener();
+    }
+
+    /**
+     *
+     * @param guild
+     * @param message
+     */
+    savePlayerMessage(guild, message)
+    {
+        this.messages.set(guild.id, message);
     }
 
     /**
@@ -60,8 +73,9 @@ module.exports = class MusicPlayer extends BasePlayer
     /**
      * TODO: test this
      * @param guild
+     * @param mode
      */
-    shuffle(guild)
+    shuffle(guild, mode = 'automatic')
     {
         this._resetQueuePosition(guild.id);
         let queue = this._queue.get(guild.id);
@@ -70,6 +84,7 @@ module.exports = class MusicPlayer extends BasePlayer
                 queue.tracks = this._randomizeArray(queue.tracks);
                 this._queue.set(guild.id, queue);
                 this.emit('shuffle', `Music Player has shuffled _${queue.tracks.length}_ records`, guild)
+                if (mode === 'manual') this.emit('update', guild);
             } else this.emit('shuffle', 'Music Player could not shuffle tracks - not enough tracks present', guild)
         } else this.emit('shuffle', 'Music Player could not shuffle track list at the moment.', guild)
     }
@@ -167,7 +182,8 @@ module.exports = class MusicPlayer extends BasePlayer
             state.stop = true;
             this._state.set(guild.id, state);
             connection.dispatcher.destroy('stop() method initiated');
-            this.emit('stop', 'Music player has been stopped.', guild)
+            this.emit('stop', 'Music player has been stopped.', guild);
+            this.emit('update', guild, true);
         } else this.emit('stop', 'Music Player could not be stopped. Player not connected.', guild)
     }
 
@@ -184,8 +200,53 @@ module.exports = class MusicPlayer extends BasePlayer
             connection.dispatcher.setVolume(volume / 100.0);
             state.volume = volume / 100.0;
             this._state.set(guild.id, state);
-            this.emit('volume', `Music player volume has been set to \`${volume}\``, guild)
+            this.emit('volume', `Music player volume has been set to \`${volume}\``, guild);
+            this.emit('update', guild);
         } else this.emit('volume', 'Music Player is not active at the moment. Can not set volume.', guild)
+    }
+
+    /**
+     * Listener tracks important music player changes and updates player message accordingly
+     * @private
+     */
+    _registerListener()
+    {
+        this.on('update', (guild, stopped = false) => {
+            let message = this.messages.get(guild.id);
+            if (message) message.delete();
+            if (stopped === false && message) {
+                let channel = message.channel;
+                channel.send('', {embed: this.getInfo(guild)});
+            } else if (stopped === true) {
+                this.messages.delete(guild.id);
+            }
+        })
+    }
+
+    /**
+     * Gets music player info
+     * @param guild
+     * @returns {*}
+     */
+    getInfo(guild)
+    {
+        let connection = guild.voiceConnection;
+        if (connection && connection.dispatcher) {
+            let queue = this._queue.get(guild.id);
+            let track = queue.tracks[queue.position];
+
+            let embed = new Discord.RichEmbed();
+            embed
+                .setAuthor(`Playing - 🎵 ${track.title} | ${track.source} 🎵`, track.image, track.url)
+                .setColor('RANDOM')
+                .addField('Song Number', `${track.position+1} / ${track.total}`, true)
+                .addField('Duration', `${track.duration}`, true)
+                .addField('Volume', `${connection.dispatcher.volume * 100}`, true)
+                .addField('Requested By', guild.members.get(track.added_by) || 'Unknown', true)
+                .setTimestamp();
+            return embed;
+        }
+        return null;
     }
 
 };

@@ -43,8 +43,8 @@ module.exports = class SearchCommand extends Command {
 
             indicatorMsg.delete();
 
-            if (results.length > 50 || result.length === 1) {
-                this.client.music.loadTracks(results, msg.guild);
+            if (results.length > 50 || results.length === 1) {
+                this.client.music.loadTracks(results, msg.guild, msg.author.id);
                 return (await msg.say(`${results.length} track(s) have been added to the music queue.`)).delete(12000)
             } else {
                 this.client.music.searches.set(msg.guild.id, results);

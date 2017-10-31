@@ -7,7 +7,7 @@ module.exports = class VolumeCommand extends Command {
             aliases: ['sound'],
             group: 'music',
             memberName: 'volume',
-            description: 'Sets or Views music player volume',
+            description: 'Sets music player volume',
             examples: ['volume', 'volume 50'],
             guildOnly: true,
             args: [
@@ -16,7 +16,7 @@ module.exports = class VolumeCommand extends Command {
                     prompt: 'Enter volume value between 0 - 100',
                     type: 'string',
                     validate: volume => {
-                        return volume <= 100 || volume >= 0 || !volume;
+                        return volume <= 100 || volume >= 0;
                     }
                 }
             ],
@@ -29,19 +29,12 @@ module.exports = class VolumeCommand extends Command {
     }
 
     /**
-     *
      * @param msg
      * @returns {Promise.<Message|Message[]>}
      */
     async run(msg, args) {
         try {
-            if (args.volume) {
-                this.client.music.setVolume(msg.guild, args.volume);
-            } else {
-                if (msg.guild.voiceConnection && msg.guild.voiceConnection.dispatcher)
-                    return (await msg.say(`Music player volume is ${msg.guild.voiceConnection.dispatcher.volume * 100}`)).delete(12000);
-                else return (await msg.say('Music player is not active at the moment')).delete(12000);
-            }
+            this.client.music.setVolume(msg.guild, args.volume);
         } catch (e) {
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.')
