@@ -64,16 +64,17 @@ module.exports = class Youtube
     {
         let queryIsPlaylist = validator.isURL(query) && query.indexOf('list=') > -1;
         if (queryIsPlaylist) return this.getPlaylistVideos(query);
-        else if (validator.isURL(query)) return this._getSingleVideo(query);
+        else if (validator.isURL(query)) return this._getVideos(query);
         else {
             let deferred = promise.defer();
             let requestUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${this.token}&type=video`;
             request(requestUrl, async (error, response) => {
                 if (response.statusCode === 200) {
-                    let formatted = [];
                     let sliced = response.body.items.slice(0, results);
-                    for (let track of sliced) formatted.push(this._constructTrackObject(track));
-                    deferred.resolve(formatted);
+                    let ids = [];
+                    for (let track of sliced) ids.push(track.id.videoId);
+                    let videos = (await this._getVideos(ids.join(',')));
+                    deferred.resolve(videos);
                 } else deferred.reject(response);
             });
 
@@ -137,7 +138,7 @@ module.exports = class Youtube
                 // splitting deeperRequestIDS array into three chunks to avoid exceeding form request limit
                 // for each chunk of ids we send additional video data request to get the damn duration...
                 let chunks = this._chunkArray(deeperRequestIDS, 4);
-                for (let idsChunk of chunks) results.items = results.items.concat(await this._getSingleVideo(idsChunk.join(',')));
+                for (let idsChunk of chunks) results.items = results.items.concat(await this._getVideos(idsChunk.join(',')));
                 deferred.resolve(results);
             } else {
                 console.log(error);
@@ -154,7 +155,7 @@ module.exports = class Youtube
      * @returns {PromiseConstructor | Promise}
      * @private
      */
-    _getSingleVideo(query)
+    _getVideos(query)
     {
         let deferred = promise.defer();
         if (validator.isURL(query)) query = query.split('=')[1];

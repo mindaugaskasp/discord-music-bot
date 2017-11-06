@@ -37,7 +37,7 @@ module.exports = class BasePlayer extends EventEmitter
     {
         let queue = this._queue.get(guild.id);
         if (queue) return queue.tracks;
-        return null;
+        return [];
     }
 
     /**
