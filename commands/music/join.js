@@ -19,7 +19,6 @@ module.exports = class JoinCommand extends Command {
     }
 
     /**
-     *
      * @param msg
      * @returns {Promise.<Message|Message[]>}
      */

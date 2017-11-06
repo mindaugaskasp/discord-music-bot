@@ -13,6 +13,7 @@ module.exports = class BasePlayer extends EventEmitter
         this._youtube = youtube;
         this._queue = new Map();
         this._state = new Map();
+        this._timeouts = new Map();
         this.searches = new Map();
 
         if (!fs.existsSync(`${BasePlayer.DOWNLOAD_DIR()}`)) {
@@ -164,6 +165,17 @@ module.exports = class BasePlayer extends EventEmitter
         return state;
     }
 
+    /**
+     *
+     * @param id
+     * @private
+     */
+    _incrementTimeout(id)
+    {
+        let timeout = this._timeouts.get(id) || {count: 0};
+        timeout.count++;
+        this._timeouts.set(id, timeout);
+    }
     /**
      *
      * @param guildID

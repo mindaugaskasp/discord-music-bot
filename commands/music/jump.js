@@ -13,7 +13,7 @@ module.exports = class JumpCommand extends Command {
             args:[
                 {
                     key: 'number',
-                    prompt: 'Enter valid track number in the queue',
+                    prompt: 'Enter a valid track number, view music queue for track list',
                     type: 'integer',
                     validate: number => {
                         return number >= 1;

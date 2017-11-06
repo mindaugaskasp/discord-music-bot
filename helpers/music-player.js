@@ -30,6 +30,14 @@ module.exports = class MusicPlayer extends BasePlayer
         let queue = this._queue.get(guild.id);
         let connection = guild.voiceConnection;
         let state = this._state.get(guild.id);
+        let timeout = this._timeouts.get(guild.id);
+
+        if (connection.channel.members.size === 1) {
+            connection.disconnect();
+            return this.emit('play', 'Music player stopped. No people in voice channel. Disconnecting...');
+        }
+
+        if (timeout && timeout.count > 5) return this.emit('play', 'Music player has shut itself down due to failing to play track(s) for too long. Please make sure your music queue is not corrupted.', guild);
         if (!state) state = this._initDefaultState(guild.id);
 
         if (!queue || !queue.tracks || queue.tracks.length === 0) return this.emit('play', 'Queue for given guild is empty.', guild);
@@ -37,10 +45,9 @@ module.exports = class MusicPlayer extends BasePlayer
 
         if (queue.queue_end_reached === true && state.loop === true) {
             if (state.shuffle === true) this.shuffle(guild);
-            else this._resetQueuePosition(guild.id);
+            this._resetQueuePosition(guild.id);
             queue = this._queue.get(guild.id);
-        } else if (queue.queue_end_reached === true && state.loop === false)
-            return this.emit('play', 'Music has finished playing for given guild. Looping is not enabled.', guild);
+        } else if (queue.queue_end_reached === true && state.loop === false) return this.emit('play', 'Music has finished playing for given guild. Looping is not enabled.', guild);
 
         let track = this._getTrack(queue);
         await this._youtube.download(track.url, `${MusicPlayer.DOWNLOAD_DIR()}/${guild.id}`);
@@ -49,11 +56,12 @@ module.exports = class MusicPlayer extends BasePlayer
         dispatcher.on('start', () => {
             state.seek = 0;
             this._state.set(guild.id, state);
+            this._timeouts.delete(guild.id);
             this.emit('playing', track, guild);
         });
 
         dispatcher.on('end', (reason) => {
-            console.log('Dispatcher end event, incrementing queue.', reason);
+            console.log('Dispatcher end event', reason);
             if (state.stop === false) {
                 this._TryToIncrementQueue(guild.id);
                 return this.play(guild);
@@ -65,26 +73,23 @@ module.exports = class MusicPlayer extends BasePlayer
 
         dispatcher.on('error', e => {
             console.log(e);
+            this._incrementTimeout(guild.id);
             this._TryToIncrementQueue(guild.id);
-            return this.emit('play', `Music player encountered an error trying to play \`${track.title}\``, guild);
+            return this.emit('play', `Music player encountered an error trying to play \`${track.title}\`.`, guild);
         });
     }
 
     /**
-     * TODO: test this
      * @param guild
-     * @param mode
      */
-    shuffle(guild, mode = 'automatic')
+    shuffle(guild)
     {
-        this._resetQueuePosition(guild.id);
         let queue = this._queue.get(guild.id);
         if (queue) {
             if (queue.tracks.length >= 2) {
                 queue.tracks = this._randomizeArray(queue.tracks);
                 this._queue.set(guild.id, queue);
-                this.emit('shuffle', `Music Player has shuffled _${queue.tracks.length}_ records`, guild)
-                if (mode === 'manual') this.emit('update', guild);
+                this.emit('shuffle', `Music Player has shuffled _${queue.tracks.length}_ records`, guild);
             } else this.emit('shuffle', 'Music Player could not shuffle tracks - not enough tracks present', guild)
         } else this.emit('shuffle', 'Music Player could not shuffle track list at the moment.', guild)
     }
@@ -213,10 +218,10 @@ module.exports = class MusicPlayer extends BasePlayer
     {
         this.on('update', (guild, stopped = false) => {
             let message = this.messages.get(guild.id);
-            if (message) message.delete();
+            if (message && message.deletable) message.delete();
             if (stopped === false && message) {
                 let channel = message.channel;
-                channel.send('', {embed: this.getInfo(guild)});
+                this.messages.set(guild.id, channel.send('', {embed: this.getInfo(guild)}));
             } else if (stopped === true) {
                 this.messages.delete(guild.id);
             }
@@ -241,7 +246,7 @@ module.exports = class MusicPlayer extends BasePlayer
                 .setColor('RANDOM')
                 .addField('Song Number', `${track.position+1} / ${track.total}`, true)
                 .addField('Duration', `${track.duration}`, true)
-                .addField('Volume', `${connection.dispatcher.volume * 100}`, true)
+                .addField('Volume', `${connection.dispatcher.volume * 100} %`, true)
                 .addField('Requested By', guild.members.get(track.added_by) || 'Unknown', true)
                 .setTimestamp();
             return embed;
