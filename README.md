@@ -15,7 +15,7 @@ _Out of the box you get_:
 1. Install Node.js (7.1 ver or newer) / NPM package manager for your machine
 2. Clone repository if you haven't done so yet `git clone https://github.com/mindaugaskasp/discord-music-bot.git` or just download it as ZIP
 3. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio etc)
-4. Open terminal and change your working directory to project root (e.g. `cd <PathToProjectRoot>`)
+4. Open terminal and change your working directory to project root (e.g. `cd <PathToProjectRoot>`) and run `npm install`
 5. In terminal run `npm run debug` - which basically will start `debug` script defined in `package.json`, run `npm run prod` for production.
 6. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID
 7. Use command `<prefix>help` to view commands available, `<prefix>` is custom command prefix you can set in `configs/app.json` file. All commands must start by declaring the prefix first. E.g. If we have default prefix set as `!` then all commands would proceed with it and be initiated like so `!help` or `!join` etc. 
