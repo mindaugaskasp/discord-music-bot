@@ -64,4 +64,4 @@ typings/
 .downloads
 
 $config files
-configs
+/configs
