@@ -27,9 +27,9 @@ module.exports = class Youtube
                 fs.createWriteStream(path).on('close', () => {
                     deferred.resolve();
                 })
-                    .on('error', (e) => {
-                        deferred.reject(e);
-                    })
+                .on('error', (e) => {
+                    deferred.reject(e);
+                })
             );
 
         return deferred.promise;
@@ -44,10 +44,18 @@ module.exports = class Youtube
     _constructTrackObject(track)
     {
         let duration = moment.duration(track.contentDetails.duration);
+        let image = null;
+
+        if (track.snippet.thumbnails.default) image = track.snippet.thumbnails.default.url;
+        if (track.snippet.thumbnails.medium) image = track.snippet.thumbnails.medium.url;
+        if (track.snippet.thumbnails.standard) image = track.snippet.thumbnails.standard.url;
+        if (track.snippet.thumbnails.high) image = track.snippet.thumbnails.high.url;
+        if (track.snippet.thumbnails.maxres) image = track.snippet.thumbnails.maxres.url;
+
         return  {
             title: track.snippet.title,
             source: `Youtube`,
-            image: track.snippet.thumbnails.default.url,
+            image: image,
             description: track.snippet.description,
             url: `${this.base_url}/watch?v=${track.id || track.id.videoId}`,
             duration:`${duration.hours()< 10 ? '0' : ''}${duration.hours()}:${duration.minutes() < 10 ? '0' : ''}${duration.minutes()}:${duration.seconds() < 10 ? '0' : ''}${duration.seconds()}`,

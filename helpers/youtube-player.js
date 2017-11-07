@@ -53,8 +53,8 @@ module.exports = class YoutubePlayer extends BasePlayer
         } else if (queue.queue_end_reached === true && state.loop === false) return this.emit('play', 'Music has finished playing for given guild. Looping is not enabled.', guild);
 
         let track = this._getTrack(queue);
-        await this._youtube.download(track.url, `${MusicPlayer.DOWNLOAD_DIR()}/${guild.id}`);
-        let dispatcher = connection.playFile(`${MusicPlayer.DOWNLOAD_DIR()}/${guild.id}`, {seek: state.seek, volume: state.volume, passes: 2});
+        if (!state.seek) await this._youtube.download(track.url, `${YoutubePlayer.DOWNLOAD_DIR()}/${guild.id}`);
+        let dispatcher = connection.playFile(`${YoutubePlayer.DOWNLOAD_DIR()}/${guild.id}`, {seek: state.seek, volume: state.volume, passes: 2});
 
         dispatcher.on('start', () => {
             state.seek = 0;

@@ -1,23 +1,23 @@
 {
   "bot": {
     "name": "Musico",
-    "token": "",
+    "token": "MzczMTE0NjE3NzIwODY0NzY5.DOG30Q.xhIMpf_LNN3Oo7H3ZEma3sY_THI",
     "owners": [
-        ""
+      "218044530635702274"
     ],
     "delete_cmd_messages": true,
     "default_cmd_prefix": ".",
     "game": "use .help command"
   },
   "youtube": {
-    "token": "",
+    "token": "AIzaSyBMW90yVK2vCZcFkbt6qzLKzZ0Ivbp6qbA",
     "base_url": "https://www.youtube.com"
   },
   "listen_moe": {
     "image": "https://listen.moe/files/images/fb_share.jpg",
     "url": "https://listen.moe",
-    "username": "",
-    "password": "",
+    "username": "Xayah",
+    "password": "infinity",
     "stream": "https://listen.moe/stream"
   }
 }
