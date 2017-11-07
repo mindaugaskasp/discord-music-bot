@@ -39,7 +39,7 @@ class TimeArgumentType extends ArgumentType
             total : {
                 seconds: hrs * 60 * 60 + mins * 60 + secs
             },
-            text: `${hrs < 9 ? '0' : ''}${hrs}:${mins < 9 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`
+            text: `${hrs < 10 ? '0' : ''}${hrs}:${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`
         };
     }
 
@@ -52,7 +52,7 @@ class TimeArgumentType extends ArgumentType
      */
     validate(value, msg, arg)
     {
-        let validationText = `Incorrect time format provided: Expected format 4:30 1:20:30 or similar. Received: ${value}`;
+        let validationText = `Incorrect time format provided! Expected format 4:30, 04:30, 1:20:30 or similar [hh:mm:ss]. Received: ${value}`;
 
         let split = msg.argString.split(TimeArgumentType.SEP());
         if (split.length === 0 || split.length > 3) {

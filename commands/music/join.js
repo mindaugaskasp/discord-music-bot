@@ -9,11 +9,11 @@ module.exports = class JoinCommand extends Command {
             memberName: 'join',
             description: 'Joins user active voice channel',
             examples: ['join'],
+            guildOnly: true,
             throttling: {
                 usages: 2,
                 duration: 5
             },
-            guildOnly: true,
         });
 
     }

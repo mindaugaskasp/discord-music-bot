@@ -43,6 +43,8 @@ module.exports = class MusicPlayer extends BasePlayer
         if (!queue || !queue.tracks || queue.tracks.length === 0) return this.emit('play', 'Queue for given guild is empty.', guild);
         if (!connection) return this.emit('play', 'Not connected to voice channel for given guild.', guild);
 
+        if (connection.dispatcher && connection.dispatcher.paused) return this.emit('play', 'Music played is paused. Please resume playback or stop it before trying to play it.', guild);
+
         if (queue.queue_end_reached === true && state.loop === true) {
             if (state.shuffle === true) this.shuffle(guild);
             this._resetQueuePosition(guild.id);
