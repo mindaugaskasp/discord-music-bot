@@ -23,9 +23,11 @@ _Out of the box you get_:
 ## How to Use - Docker Edition
 
 1. Install Docker & Docker Compose for your machine
-2. Cd to project root (assuming you've cloned the repository already)
-3. Run `docker-compose run --build` to build image & run container
-4. (Optional): Run `docker-compose down` to shut down container instance. Refer to docker-compose manual for more info on docker command usage.
+2. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio etc)
+3. Cd to project root (assuming you've cloned the repository already)
+4. Run `docker-compose run --build` to build image & run container. If you see `Logged In!` in terminal window. Your bot has started without any problems.
+5. (Optional): Run `docker-compose down` to shut down container instance. Refer to docker-compose manual for more info on docker command usage.
+6. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID
 
 ## User Guide
 
