@@ -47,6 +47,7 @@
     "superagent": "^3.5.2",
     "uws": "^8.14.1",
     "validator": "^9.1.1",
-    "ytdl-core": "^0.16.2"
+    "ytdl-core": "^0.16.2",
+    "axios": "^0.15.3"
   }
 }

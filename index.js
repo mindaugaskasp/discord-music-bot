@@ -1,10 +1,12 @@
 const { CommandoClient, SQLiteProvider } = require('discord.js-commando');
 const path = require('path');
 const config = require('./configs/app.json');
-const Player = require('./helpers/music-player');
+const YoutubePlayer = require('./helpers/youtube-player');
 const sqlite = require('sqlite');
 const TimeArgumentType = require('./arguments/time-argument');
 const Youtube = require('./helpers/integrations/youtube');
+const ListenMoe = require('./helpers/integrations/listen-moe/moe');
+const MoePlayer = require('./helpers/radio-player');
 
 sqlite.open(path.join(`${__dirname}/sqlite`, "database.sqlite3")).then((db) => {
     client.setProvider(new SQLiteProvider(db));
@@ -19,8 +21,8 @@ const client = new CommandoClient({
 
 // custom objects are attached to the client
 client.config = config;
-client.music = new Player(new Youtube(config.youtube.token, config.youtube.base_url));
-
+client.music = new YoutubePlayer(new Youtube(config.youtube.token, config.youtube.base_url));
+client.moe_radio = new MoePlayer(new ListenMoe(config.listen_moe.username, config.listen_moe.password), config.listen_moe);
 client.registry
     .registerDefaultTypes()
     .registerGroups([

@@ -1,7 +1,7 @@
 const BasePlayer = require('./base-player');
 const Discord = require('discord.js');
 
-module.exports = class MusicPlayer extends BasePlayer
+module.exports = class YoutubePlayer extends BasePlayer
 {
     constructor(youtube)
     {
@@ -44,6 +44,7 @@ module.exports = class MusicPlayer extends BasePlayer
         if (!connection) return this.emit('play', 'Not connected to voice channel for given guild.', guild);
 
         if (connection.dispatcher && connection.dispatcher.paused) return this.emit('play', 'Music played is paused. Please resume playback or stop it before trying to play it.', guild);
+        else if (connection.dispatcher) connection.dispatcher.destroy('play', 'New dispatcher initialized');
 
         if (queue.queue_end_reached === true && state.loop === true) {
             if (state.shuffle === true) this.shuffle(guild);
@@ -125,8 +126,9 @@ module.exports = class MusicPlayer extends BasePlayer
      */
     skip(guild)
     {
+        let state = this._state.get(guild.id);
         let connection = guild.voiceConnection;
-        if (connection && (connection.dispatcher || connection.speaking === true)) {
+        if (state && connection && (connection.dispatcher || connection.speaking === true)) {
             connection.dispatcher.end('skip() method initiated');
             return this.emit('skip', 'Music player is skipping.', guild)
         } else this.emit('skip', 'Music Player could not skip track at the moment. Player not connected or is not playing anything yet.', guild)
@@ -186,11 +188,13 @@ module.exports = class MusicPlayer extends BasePlayer
         let state = this._state.get(guild.id);
         let connection = guild.voiceConnection;
         if (connection && connection.dispatcher) {
-            state.stop = true;
-            this._state.set(guild.id, state);
-            connection.dispatcher.destroy('stop() method initiated');
-            this.emit('stop', 'Music player has been stopped.', guild);
-            this.emit('update', guild, true);
+            if (state) {
+                state.stop = true;
+                this._state.set(guild.id, state);
+                this.emit('stop', 'Music player has been stopped.', guild);
+                this.emit('update', guild, true);
+            }
+            connection.dispatcher.destroy('stop', 'manual dispatcher destroy init');
         } else this.emit('stop', 'Music Player could not be stopped. Player not connected.', guild)
     }
 
@@ -241,7 +245,6 @@ module.exports = class MusicPlayer extends BasePlayer
         if (connection && connection.dispatcher) {
             let queue = this._queue.get(guild.id);
             let track = queue.tracks[queue.position];
-
             let embed = new Discord.RichEmbed();
             embed
                 .setAuthor(`Playing - 🎵 ${track.title} | ${track.source} 🎵`, track.image, track.url)
@@ -250,6 +253,7 @@ module.exports = class MusicPlayer extends BasePlayer
                 .addField('Duration', `${track.duration}`, true)
                 .addField('Volume', `${connection.dispatcher.volume * 100} %`, true)
                 .addField('Requested By', guild.members.get(track.added_by) || 'Unknown', true)
+                .setImage(track.image)
                 .setTimestamp();
             return embed;
         }

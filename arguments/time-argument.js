@@ -5,7 +5,6 @@ class TimeArgumentType extends ArgumentType
     static SEP() {return ':'}
 
     /**
-     *
      * @param client
      */
     constructor(client)
@@ -77,7 +76,6 @@ class TimeArgumentType extends ArgumentType
     }
 
     /**
-     *
      * @param str
      * @returns {*}
      * @private
