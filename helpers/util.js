@@ -1,5 +1,5 @@
 /**
- * Class responsible for general Utility methods that do not find anywhere else
+ * Class responsible for general Utility methods that do not fit anywhere else
  * @type {module.Util}
  */
 module.exports = class Util

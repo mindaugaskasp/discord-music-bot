@@ -20,7 +20,7 @@ module.exports = class MoeRadioCommand extends Command {
         try {
             this._initListeners();
         } catch (e) {
-            console.log('Failed to initialize PlayCommand listeners', e);
+            console.log('Failed to initialize MoeRadioCommand listeners', e);
         }
     }
 
@@ -43,10 +43,11 @@ module.exports = class MoeRadioCommand extends Command {
         let playingMessage = null;
         this.client.moe_radio.on('streaming', async (embed, guild) => {
             if (guild.voiceConnection) {
+                let channel = playingMessage && playingMessage.channel ? guild.channels.get(playingMessage.channel.id) : guild.channels.find('type', 'text');
                 if (playingMessage && playingMessage.deletable) playingMessage.delete();
-                let channel = playingMessage ? playingMessage.channel : guild.channels.find('type', 'text');
-                if (channel && embed !== null) playingMessage = (await channel.send('', {embed: embed}));
-                else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display radio playing embed.`)
+                if (channel && embed !== null) {
+                    playingMessage = (await channel.send('', {embed: embed}));
+                } else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display radio playing embed.`)
             }
         });
 
@@ -54,7 +55,7 @@ module.exports = class MoeRadioCommand extends Command {
             if (guild.voiceConnection) {
                 let channel = guild.channels.find('type', 'text');
                 if (channel && text) channel.send(text);
-                else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
+                else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display radio stream text.`)
             }
         });
 

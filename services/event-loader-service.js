@@ -45,7 +45,7 @@ module.exports = class EventLoaderService
 
             if (!this.client['events']) this.client['events'] = [];
             this.client.events.push(new event(this.client).handle());
-            console.log('info', `Event loaded successfully ${filepath}`);
+            console.log(`Event loaded successfully ${filepath}`);
         } catch (e) {
             console.log('Failed to load event', filepath);
         }

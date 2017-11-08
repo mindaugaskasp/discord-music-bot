@@ -15,6 +15,7 @@ module.exports = class JoinCommand extends Command {
                 duration: 5
             },
             clientPermissions: ['CONNECT'],
+            userPermissions: ['CONNECT'],
         });
 
     }

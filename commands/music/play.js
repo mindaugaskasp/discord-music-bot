@@ -46,6 +46,7 @@ module.exports = class PlayCommand extends Command {
                 if (playingMessage && playingMessage.deletable) playingMessage.delete();
 
                 let channel = guild.channels.find('type', 'text');
+                console.log(channel);
                 if (channel) this.client.music.savePlayerMessage(guild, (await channel.send('', {embed: this.client.music.getInfo(guild)})));
                 else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
             }
@@ -56,10 +57,10 @@ module.exports = class PlayCommand extends Command {
                 let channel = guild.channels.find('type', 'text');
                 if (channel) channel.send(text);
                 else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
+                console.log(channel);
             }
         });
 
         this.client.music.on('error', text => { throw text; });
     }
-
 };
