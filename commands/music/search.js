@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const Youtube = require('../../helpers/integrations/youtube');
+const Util = require('../../helpers/util');
 
 /**
  * Command responsible for retrieving tracks via youtube data API and saving to memory
@@ -35,26 +36,25 @@ module.exports = class SearchCommand extends Command {
      * @returns {Promise.<*>}
      */
     async run(msg, args) {
+        let loaderMsg;
         try {
             let indicatorMsg = (await msg.say('Searching for music. Please be patient.'));
+            loaderMsg = await Util.constructLoadingMessage(await msg.say(':hourglass_flowing_sand:'), ':hourglass_flowing_sand:');
 
             let results = await this.youtube.search(args.query);
-            (await msg.say(`_${results.length}_ result(s) have been found!`)).delete(20000);
-
             indicatorMsg.delete();
 
             if (results.length > 50 || results.length === 1) {
                 this.client.music.loadTracks(results, msg.guild, msg.author.id);
+                loaderMsg.delete();
                 return (await msg.say(`${results.length} track(s) have been added to the music queue.`)).delete(12000)
             } else {
                 this.client.music.searches.set(msg.guild.id, results);
-
-                let text = 'Select song(s) to be added to music queue by using command `select` and specifying song number(s) as an argument. E.g. `select 1,2` or `select all`.\n\n';
-                let counter = 1;
-                for (let track of results) text += `${counter++}. ${track.title} - ${track.url}\n`
-                return (await msg.say(text, {code: 'python'})).delete(35000);
+                return (await msg.say('Select song(s) to be added to music queue by using command `select` and specifying song number(s) as an argument. E.g. `select 1,2` or `select all`.\n'+
+                    Util.getPaginatedList(results, args.page) + '\nTo view more search results use command stash', {code: 'python', split: true})).delete(12000);
             }
         } catch (e) {
+            if (loaderMsg && typeof loaderMsg.delete === 'function') loaderMsg.delete();
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.')
         }

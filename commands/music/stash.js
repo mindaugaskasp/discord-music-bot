@@ -1,4 +1,5 @@
 const { Command } = require('discord.js-commando');
+const Util = require('../../helpers/util');
 
 module.exports = class StashCommand extends Command {
     constructor(client) {
@@ -9,6 +10,12 @@ module.exports = class StashCommand extends Command {
             memberName: 'stash',
             description: 'Views Music search stash',
             examples: ['stash'],
+            args: [{
+                key: 'page',
+                prompt: 'Enter page number',
+                type: 'integer',
+                default: 1
+            }],
             guildOnly: true,
         });
 
@@ -22,12 +29,7 @@ module.exports = class StashCommand extends Command {
         try {
             let list = this.client.music.searches.get(msg.guild.id);
             if (!list || list.length === 0) return (await msg.say('Music stash is empty. Search for some songs first.')).delete(1200);
-            else {
-                let str = `Guild - ${msg.guild.name} - Search stash\n\n`;
-                let counter = 1;
-                for (let track of list) str += `${counter++}. ${track.title} \ ${track.url}\n`;
-                return (await msg.say(str, {code: 'css', split: true})).delete(12000);
-            }
+            else return (await msg.say( `Guild - ${msg.guild.name} - Music Search Stash List\n`+ Util.getPaginatedList(list, args.page), {code: 'python', split: true})).delete(12000);
         } catch (e) {
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.')
