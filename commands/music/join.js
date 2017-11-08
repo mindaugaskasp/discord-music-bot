@@ -14,6 +14,7 @@ module.exports = class JoinCommand extends Command {
                 usages: 2,
                 duration: 5
             },
+            clientPermissions: ['CONNECT'],
         });
 
     }
@@ -26,8 +27,10 @@ module.exports = class JoinCommand extends Command {
         try {
             let user = msg.member;
             if (!user.voiceChannel) return (await msg.say('You must join voice channel first before using this command')).delete(1200);
-            else user.voiceChannel.join().then(async (connection) => (await msg.say(`Joined Voice Channel - \`${connection.channel.name}\``)).delete(12000));
-
+            else {
+                if (user.voiceChannel.joinable) user.voiceChannel.join().then(async (connection) => (await msg.say(`Joined Voice Channel - \`${connection.channel.name}\``)).delete(12000));
+                else return msg.say(`I can't join channel ${user.voiceChannel.name}. Missing permissions.`)
+            }
         } catch (e) {
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.')

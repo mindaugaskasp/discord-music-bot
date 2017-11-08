@@ -14,6 +14,7 @@ module.exports = class PlayCommand extends Command {
             description: 'Plays loaded queue',
             examples: ['play'],
             guildOnly: true,
+            clientPermissions: ['CONNECT', 'SPEAK'],
         });
 
         try {

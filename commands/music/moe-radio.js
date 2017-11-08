@@ -14,6 +14,7 @@ module.exports = class MoeRadioCommand extends Command {
                 usages: 2,
                 duration: 5
             },
+            clientPermissions: ['CONNECT', 'SPEAK'],
         });
 
         try {

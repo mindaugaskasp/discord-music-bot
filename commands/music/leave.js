@@ -14,6 +14,7 @@ module.exports = class PlayCommand extends Command {
                 duration: 5
             },
             guildOnly: true,
+            clientPermissions: ['CONNECT'],
         });
 
     }
