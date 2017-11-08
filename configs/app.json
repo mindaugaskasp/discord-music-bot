@@ -1,0 +1,23 @@
+{
+  "bot": {
+    "name": "Musico",
+    "token": "",
+    "owners": [
+      ""
+    ],
+    "delete_cmd_messages": true,
+    "default_cmd_prefix": ".",
+    "game": "use .help command"
+  },
+  "youtube": {
+    "token": "",
+    "base_url": "https://www.youtube.com"
+  },
+  "listen_moe": {
+    "image": "https://listen.moe/files/images/fb_share.jpg",
+    "url": "https://listen.moe",
+    "username": "",
+    "password": "",
+    "stream": "https://listen.moe/stream"
+  }
+}
