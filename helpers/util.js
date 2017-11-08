@@ -33,7 +33,6 @@ module.exports = class Util
     }
 
     /**
-     * DO NOT AWAIT THIS MESSAGE
      * @param message
      * @param append
      * @param maxLen
@@ -58,6 +57,7 @@ module.exports = class Util
             }
             return message;
         } catch (error) {
+            console.log('Loading message error', e);
         }
     }
 };
