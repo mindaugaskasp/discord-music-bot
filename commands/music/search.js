@@ -43,10 +43,10 @@ module.exports = class SearchCommand extends Command {
 
             let results = await this.youtube.search(args.query);
             indicatorMsg.delete();
+            loaderMsg.delete();
 
             if (results.length > 50 || results.length === 1) {
                 this.client.music.loadTracks(results, msg.guild, msg.author.id);
-                loaderMsg.delete();
                 return (await msg.say(`${results.length} track(s) have been added to the music queue.`)).delete(12000)
             } else {
                 this.client.music.searches.set(msg.guild.id, results);

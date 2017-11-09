@@ -13,9 +13,19 @@ module.exports = class BasePlayer extends EventEmitter
         super();
         this._listenMoe = listenMoe;
         this._listenMoe.openSocket();
-
+        this._messages = new Map();
         this._state = new Map();
         this.config = config;
+    }
+
+    /**
+     *
+     * @param guild
+     * @param message
+     */
+    savePlayerMessage(guild, message)
+    {
+        this._messages.set(guild.id, message);
     }
 
     /**
@@ -38,7 +48,6 @@ module.exports = class BasePlayer extends EventEmitter
         dispatcher.on('end', (reason) => {
             console.log("Dispatcher end event", reason);
             this._state.delete(guild.id);
-            this.emit('streaming', guild, null)
         });
         dispatcher.on('error', (reason) => {
             console.log('Dispatcher error event:', reason);
@@ -50,9 +59,11 @@ module.exports = class BasePlayer extends EventEmitter
             if (state && state.listening)  {
                 this._state.set(guild.id, {listening: true});
                 if (connection.channel.members.size === 1) {
-                    this._state.delete(guild.id);
-                    this.emit('stream', 'No users in voice channel. Turning off radio for now.', guild);
+                    let msg = this._messages.get(guild.id);
+                    if (msg && msg.deletable) msg.delete();
                     connection.disconnect();
+                    this.emit('stream', 'No users in voice channel. Turning off radio for now.', guild);
+                    this._state.delete(guild.id);
                 } else this.emit('streaming', this.getInfo(guild), guild);
             }
         });

@@ -27,7 +27,7 @@ module.exports = class EventLoaderService
             // if file do not end with . we assume it is a dir
             if (file.split('.').length === 1) {
                 this.load(`${path}/${file}`)
-            } else if (this.ignores.indexOf(file.split('/')[0]) === -1) {
+            } else if (file.split('.')[1] === 'js' && this.ignores.indexOf(file.split('/')[0]) === -1) {
                 this._attachEvent(`.${path}/${file}`)
             } else console.log(`Ignored ${file}`);
         });
@@ -42,7 +42,6 @@ module.exports = class EventLoaderService
     {
         try {
             let event = require(filepath);
-
             if (!this.client['events']) this.client['events'] = [];
             this.client.events.push(new event(this.client).handle());
             console.log(`Event loaded successfully ${filepath}`);

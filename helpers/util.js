@@ -42,22 +42,22 @@ module.exports = class Util
     {
         try {
             message =  await message.channel.fetchMessage(message.id);
-            if (message.deletable) {
+            if (message && message.deletable) {
                 let content = message.content + append;
                 if (content.length >= maxLen) content = append;
 
-                message =  await message.channel.fetchMessage(message.id);
                 if (message.editable) {
-                    let editedMessage = (await message.edit(content));
+                    message = (await message.edit(content));
                     setTimeout(async function(){
-                        await Util.constructLoadingMessage(editedMessage, append, maxLen);
+                        await Util.constructLoadingMessage(message, append, maxLen);
                     }, 1100);
-                    return editedMessage;
                 }
             }
             return message;
         } catch (error) {
-            console.log('Loading message error', e);
+            console.log(error);
+            // we do not care about errors here, since most of them will can not be handled if someone in discord
+            // tinkers with a message
         }
     }
 };
