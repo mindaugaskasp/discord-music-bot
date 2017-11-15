@@ -55,7 +55,6 @@ module.exports = class PlayCommand extends Command {
                 let channel = guild.channels.find('type', 'text');
                 if (channel) channel.send(text);
                 else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
-                console.log(channel);
             }
         });
 
