@@ -44,9 +44,7 @@ module.exports = class PlayCommand extends Command {
             if (guild.voiceConnection) {
                 let playingMessage = this.client.music.messages.get(guild.id);
                 if (playingMessage && playingMessage.deletable) playingMessage.delete();
-
                 let channel = guild.channels.find('type', 'text');
-                console.log(channel);
                 if (channel) this.client.music.savePlayerMessage(guild, (await channel.send('', {embed: this.client.music.getInfo(guild)})));
                 else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
             }

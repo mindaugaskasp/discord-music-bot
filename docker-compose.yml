@@ -10,4 +10,4 @@ services:
       volumes:
         - ./:/usr/src/app
       restart: always
-      entrypoint: ["npm", "run", "debug"]
+      entrypoint: ["npm", "run", "prod"]

@@ -14,9 +14,9 @@ module.exports = class VolumeCommand extends Command {
                 {
                     key: 'volume',
                     prompt: 'Enter volume value between 0 - 100',
-                    type: 'string',
+                    type: 'integer',
                     validate: volume => {
-                        return volume <= 100 || volume >= 0;
+                        return volume <= 100 && volume >= 0;
                     }
                 }
             ],

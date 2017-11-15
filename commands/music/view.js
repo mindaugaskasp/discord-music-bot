@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const Util = require('../../helpers/util');
+const Util = require('discord-helpers/util');
 
 module.exports = class ViewCommand extends Command {
     constructor(client) {

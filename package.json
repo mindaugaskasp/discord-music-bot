@@ -4,8 +4,8 @@
   "description": "Discord music bot based on discord.js & discord.js-commando",
   "main": "index.js",
   "scripts": {
-    "prod": "node ./index.js --harmony",
-    "debug": "node --inspect-brk=0.0.0.0:8080 --harmony ./index.js",
+    "prod": "node ./index.js",
+    "debug": "node --inspect-brk=127.0.0.1:8080 ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -48,6 +48,7 @@
     "uws": "^8.14.1",
     "validator": "^9.1.1",
     "ytdl-core": "^0.16.2",
-    "axios": "^0.15.3"
+    "axios": "^0.15.3",
+    "discord-helpers": "github:mindaugaskasp/discord-helpers#master"
   }
 }

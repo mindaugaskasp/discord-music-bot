@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const Youtube = require('../../helpers/integrations/youtube');
+const Youtube = require('discord-helpers/integrations/youtube');
 
 /**
  * Command responsible for filtering out the songs saved in memory from one location to the other.
@@ -11,12 +11,12 @@ const Youtube = require('../../helpers/integrations/youtube');
 module.exports = class SelectSongCommand extends Command {
     constructor(client) {
         super(client, {
-            name: 'select',
-            aliases: ['select-song', 'pick', 'take', 'choose'],
+            name: 'pick',
+            aliases: ['select-song', 'select', 'take', 'choose'],
             group: 'music',
-            memberName: 'select',
-            description: 'Selects which song(s) should be added to player',
-            examples: ['select 1', 'select 1,2', 'select all'],
+            memberName: 'pick',
+            description: 'Picks song(s) should be added to player',
+            examples: ['pick 1', 'pick 1,2', 'pick all'],
             guildOnly: true,
             args: [{
                 key: 'selection',

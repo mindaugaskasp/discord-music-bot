@@ -1,12 +1,12 @@
 const { CommandoClient, SQLiteProvider } = require('discord.js-commando');
 const path = require('path');
 const config = require('./configs/app.json');
-const YoutubePlayer = require('./helpers/youtube-player');
+const YoutubePlayer = require('discord-helpers/youtube-player');
 const sqlite = require('sqlite');
 const TimeArgumentType = require('./arguments/time-argument');
-const Youtube = require('./helpers/integrations/youtube');
-const ListenMoe = require('./helpers/integrations/listen-moe/moe');
-const MoePlayer = require('./helpers/radio-player');
+const Youtube = require('discord-helpers/integrations/youtube');
+const ListenMoe = require('discord-helpers/integrations/listen-moe/moe');
+const MoePlayer = require('discord-helpers/radio-player');
 const EventLoaderService = require('./services/event-loader-service');
 
 sqlite.open(path.join(`${__dirname}/sqlite`, "database.sqlite3")).then((db) => {
