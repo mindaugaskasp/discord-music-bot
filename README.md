@@ -5,19 +5,21 @@ _Out of the box you get_:
 
 * Multiple Guild music playback support
 * Performance - music data is kept in memory, which means rapid music playback
+* Many useful music player commands including skip, seek, jump, stop etc
 * No functional overhead
 * Docker deployment support
-* Event based player implementation - making it easier to maintain & extend code
-* Listen.moe JPOP Radio support
-* Automatic event loading - easy to add/remove any Discord event code
+* Event based music player implementation - making it easier to maintain & extend code, the command classes are super lean, too
+* Listen.moe J-Pop Radio support
+* Automatic event loading - easy to add/remove any Discord event code (simply add event class and it will be attached automatically)
 * Good guide material to code bot of your own
+* Very cool music player state message embedding - currently playing / volume data is updated on every change
 
 ## How to Use
 
-1. Install Node.js (7.6 ver or newer) / NPM package manager for your machine
+1. Install Node.js (7.1 ver or newer) / NPM package manager for your machine
 2. Clone repository if you haven't done so yet `git clone https://github.com/mindaugaskasp/discord-music-bot.git` or just download it as a ZIP
 3. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio etc)
-4. Open terminal and change your working directory to project root (e.g. `cd <PathToProjectRoot>`) and run `npm install` in the terminal
+4. Open terminal and change your working directory to project root and run `npm install` in the terminal
 5. In terminal run `npm run debug` - which basically will start `debug` script defined in `package.json`, run `npm run prod` for production.
 6. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID of the application whose token you've set in `app.json` file
 7. Confirm that application has started without any errors (look for `Logged In!` text in terminal)
@@ -26,13 +28,11 @@ _Out of the box you get_:
 ## How to Use - Docker Edition
 
 1. Install Docker & Docker Compose for your machine
-2. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio etc)
-3. Clone or download repository as ZIP and open terminal and change your working directory to cloned/downloaded project root
+2. Clone or download repository as ZIP and and change your terminal working directory to project root
+3. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio log in details etc)
 4. Run `docker-compose run --build` in terminal to build image & run container. If you see `Logged In!` in terminal window. Your bot has started without any problems.
-5. (Optional): Run `docker-compose down` to shut down container instance. Refer to docker-compose manual for more info on docker command usage.
-6. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID of the application whose token you've set in `app.json` file.
-7. Confirm that application has started without any errors (look for `Logged In!` text in terminal)
-8. Use command `<prefix>help` to view commands available in your discord guild, `<prefix>` is custom command prefix you can set in `configs/app.json` file. All commands must start by declaring the prefix first. E.g. If we have default prefix set as `!` then all commands would proceed with it and be initiated like so `!help` or `!join` etc. 
+5. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID of the application whose token you've set in `app.json` file.
+6. Use command `<prefix>help` to view commands available in your discord guild, `<prefix>` is custom command prefix you can set in `configs/app.json` file. All commands must start by declaring the prefix first. E.g. If we have default prefix set as `!` then all commands would proceed with it and be initiated like so `!help` or `!join` etc. 
 
 ## User Guide
 
@@ -58,7 +58,7 @@ $ Use command `<prefix>stash [page=1]` to view music search stash list. Similarl
 
 ## Dependencies
 
-* Node.js 7.6<
+* Node.js 7.1<
 * discord.js & discord.js-commando
 * sqlite for discord.js-commando default data persistence (to store your custom prefix etc)
 * ..check out `package.json` for more info.
