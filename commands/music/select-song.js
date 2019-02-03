@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const Youtube = require('discord-helpers/integrations/youtube');
+const Youtube = require('@mindaugaskasp/node-youtube');
 
 /**
  * Command responsible for filtering out the songs saved in memory from one location to the other.
@@ -27,7 +27,13 @@ module.exports = class SelectSongCommand extends Command {
         this.youtube = new Youtube(client.config.youtube.token, client.config.youtube.base_url);
     }
 
-    async run(msg, args) {
+    /**
+     * @param msg
+     * @param args
+     * @param fromPattern
+     * @returns {Promise<*>}
+     */
+    async run(msg, args, fromPattern) {
         try {
             if (this.client.music.getMusicQueue(msg.guild).length >= 500)
                 return (await msg.say('Music player is full. Please remove some of the tracks.')).delete(12000);
@@ -35,7 +41,9 @@ module.exports = class SelectSongCommand extends Command {
             (await msg.say('Adding track(s) to music queue. Please be patient.')).delete(12000);
 
             let searches = this.client.music.searches.get(msg.guild.id);
-            if (!searches) return (await msg.say('Please search for songs first. Search stash is empty!')).delete(12000);
+            if (!searches) {
+                return (await msg.say('Please search for songs first. Search stash is empty!')).delete(12000);
+            }
             let addedToQueue = 0;
 
             if (args.selection.toLowerCase() === 'all') {
@@ -49,7 +57,7 @@ module.exports = class SelectSongCommand extends Command {
                     for (let selectedIndex of selection)
                         if (parseInt(selectedIndex) === index+1) {
                             addedToQueue++;
-                            this.client.music.loadTrack(searches[index], msg.guild);
+                            this.client.music.loadTrack(searches[index], msg.guild, msg.author.id);
                         }
             }
 

@@ -2,7 +2,15 @@ const ArgumentType = require('discord.js-commando').ArgumentType;
 
 class TimeArgumentType extends ArgumentType
 {
-    static SEP() {return ':'}
+    /**
+     * Time argument separator
+     * @returns {string}
+     * @constructor
+     */
+    static SEP()
+    {
+        return ':'
+    }
 
     /**
      * @param client
@@ -13,11 +21,12 @@ class TimeArgumentType extends ArgumentType
     }
 
     /**
-     * @param value
-     * @param msg
+     * @param value string
+     * @param msg CommandMessage
+     * @param arg
      * @returns {*}
      */
-    parse(value, msg)
+    parse(value, msg, arg)
     {
         let split = msg.argString.split(TimeArgumentType.SEP());
         let hrs = 0, mins = 0, secs = 0;
@@ -43,7 +52,7 @@ class TimeArgumentType extends ArgumentType
     }
 
     /**
-     *
+     * Validates passed argument
      * @param value
      * @param msg
      * @param arg

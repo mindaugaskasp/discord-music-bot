@@ -27,35 +27,33 @@ module.exports = class PlayCommand extends Command {
     /**
      *
      * @param msg
-     * @returns {Promise.<Message|Message[]>}
+     * @param args
+     * @param fromPattern
+     * @returns {Promise<Message|Message[]>}
      */
-    run(msg) {
+    run(msg, args, fromPattern) {
         try {
-            this.client.music.play(msg.guild);
+            this.client.music.play(msg.guild, msg.channel);
         } catch (e) {
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.')
         }
     }
 
+    /**
+     * inits player events
+     * @private
+     */
     _initListeners()
     {
-        this.client.music.on('playing', async (track, guild) => {
-            if (guild.voiceConnection) {
-                let playingMessage = this.client.music.messages.get(guild.id);
-                if (playingMessage && playingMessage.deletable) playingMessage.delete();
-                let channel = guild.channels.find('type', 'text');
-                if (channel) this.client.music.savePlayerMessage(guild, (await channel.send('', {embed: this.client.music.getInfo(guild)})));
-                else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
-            }
+        this.client.music.on('playing', async (track, guild, channel) => {
+            let playingMessage = this.client.music.messages.get(guild.id);
+            if (playingMessage && playingMessage.deletable) playingMessage.delete();
+            this.client.music.savePlayerMessage(guild, (await channel.send('', {embed: this.client.music.getInfo(guild)})));
         });
 
-        this.client.music.on('play', (text, guild) => {
-            if (guild.voiceConnection) {
-                let channel = guild.channels.find('type', 'text');
-                if (channel) channel.send(text);
-                else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
-            }
+        this.client.music.on('play', (text, guild, channel) => {
+            channel.send(text);
         });
 
         this.client.music.on('error', text => { throw text; });

@@ -1,8 +1,31 @@
 {
   "name": "discord-music-bot",
   "version": "1.0.0",
-  "description": "Discord music bot based on discord.js & discord.js-commando",
+  "description": "simple discord music bot based on discord.js-commando",
   "main": "index.js",
+  "dependencies": {
+    "@mindaugaskasp/node-osu": "github:mindaugaskasp/node-osu",
+    "@mindaugaskasp/node-riot": "github:mindaugaskasp/node-riot",
+    "@mindaugaskasp/node-twitch": "github:mindaugaskasp/node-twitch",
+    "@mindaugaskasp/node-youtube": "github:mindaugaskasp/node-youtube",
+    "axios": "^0.15.3",
+    "bufferutil": "^4.0.1",
+    "discord.js": "^11.4.2",
+    "discord.js-commando": "^0.10.0",
+    "erlpack": "github:hammerandchisel/erlpack",
+    "ffmpeg": "0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "libsodium-wrappers": "^0.7.4",
+    "moment": "^2.24.0",
+    "node-opus": "^0.3.1",
+    "opusscript": "0.0.6",
+    "promised-io": "^0.3.5",
+    "sqlite": "^3.0.1",
+    "uws": "^99.0.0",
+    "validator": "^9.4.1",
+    "ytdl-core": "^0.29.1"
+  },
+  "devDependencies": {},
   "scripts": {
     "prod": "node ./index.js",
     "debug": "node --inspect-brk=127.0.0.1:8080 ./index.js",
@@ -15,40 +38,20 @@
   "keywords": [
     "discord",
     "music",
+    "discord-music",
+    "discord-music-bot",
+    "command-bot",
+    "discord-js.commando",
+    "music",
     "bot",
-    "voip",
-    "commando",
-    "mit",
-    "open",
-    "source",
-    "guide",
-    "bot",
-    "how",
-    "to",
-    "do",
-    "code"
+    "listen.moe",
+    "discord",
+    "bot"
   ],
   "author": "Mindaugas Kasparavičius",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mindaugaskasp/discord-music-bot/issues"
   },
-  "homepage": "https://github.com/mindaugaskasp/discord-music-bot#readme",
-  "dependencies": {
-    "bufferutil": "^3.0.2",
-    "discord.js": "^11.2.1",
-    "discord.js-commando": "github:Gawdl3y/discord.js-commando#11.2",
-    "fluent-ffmpeg": "^2.1.2",
-    "moment": "^2.19.1",
-    "node-opus": "^0.2.7",
-    "prism-media": "github:hydrabolt/prism-media",
-    "promised-io": "^0.3.5",
-    "sqlite": "^2.8.0",
-    "superagent": "^3.5.2",
-    "uws": "^8.14.1",
-    "validator": "^9.1.1",
-    "ytdl-core": "^0.16.2",
-    "axios": "^0.15.3",
-    "discord-helpers": "github:mindaugaskasp/discord-helpers#master"
-  }
+  "homepage": "https://github.com/mindaugaskasp/discord-music-bot#readme"
 }

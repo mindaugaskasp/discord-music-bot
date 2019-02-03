@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const Util = require('discord-helpers/util');
+const Helper = require('../../helper');
 
 module.exports = class ViewCommand extends Command {
     constructor(client) {
@@ -25,14 +25,18 @@ module.exports = class ViewCommand extends Command {
      *
      * @param msg
      * @param args
+     * @param fromPattern
      * @returns {Promise.<*>}
      */
-    async run(msg, args) {
+    async run(msg, args, fromPattern) {
         try {
             let list = this.client.music.getMusicQueue(msg.guild);
-            if (!list || list.length === 0) return (await msg.say('Music queue is empty. Search for some songs first.')).delete(1200);
-            else return (await msg.say( `Guild - ${msg.guild.name} - Music Queue List\n`+ Util.getPaginatedList(list, args.page), {code: 'python', split: true})).delete(12000);
-
+            if (!list || list.length === 0) {
+                return (await msg.say('Music queue is empty. Search for some songs first.')).delete(1200);
+            }
+            else {
+                return (await msg.say( `Guild - ${msg.guild.name} - Music Queue List\n`+ Helper.getPaginatedList(list, args.page), {code: 'python', split: true})).delete(12000);
+            }
         } catch (e) {
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.')

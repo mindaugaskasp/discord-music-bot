@@ -20,10 +20,13 @@ module.exports = class PlayCommand extends Command {
     }
 
     /**
+     *
      * @param msg
-     * @returns {Promise.<Message|Message[]>}
+     * @param args
+     * @param fromPattern
+     * @returns {Promise<Message|Message[]>}
      */
-    async run(msg) {
+    async run(msg, args, fromPattern) {
         try {
             let guild = msg.guild;
             if (!guild.voiceConnection) return (await msg.send('I am not in any voice channel at the moment.')).delete(12000);

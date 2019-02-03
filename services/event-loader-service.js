@@ -12,12 +12,15 @@ module.exports = class EventLoaderService
     {
         this.client = client;
         this.path = path;
-        if (ignores.length > 0)  this.ignores = ignores;
-        else this.ignores = ['event-loader.js', 'event.js']
+        if (ignores.length > 0) {
+            this.ignores = ignores;
+        } else {
+            this.ignores = ['event-loader.js', 'event.js']
+        }
     }
 
     /**
-     * ARecursively reads path dir and loads events/attaches to client object
+     * Recursively reads path dir and loads events and attaches to client object
      * ignores specific files specified in this.ignores
      */
     load(path = null)
@@ -42,7 +45,9 @@ module.exports = class EventLoaderService
     {
         try {
             let event = require(filepath);
-            if (!this.client['events']) this.client['events'] = [];
+            if (!this.client['events']) {
+                this.client['events'] = [];
+            }
             this.client.events.push(new event(this.client).handle());
             console.log(`Event loaded successfully ${filepath}`);
         } catch (e) {

@@ -22,19 +22,18 @@ module.exports = class SeekCommand extends Command {
                 }
             ],
         });
-        this.client.music.on('seek', async (text, guild) => {
-            let channel = guild.channels.find('type', 'text');
-            if (channel) (await channel.send(text)).delete(12000);
-            else console.log(`No text channel found for guild ${guild.id}/${guild.name} to display music playing embed.`)
+        this.client.music.on('seek', async (text, guild, channel) => {
+            (await channel.send(text)).delete(12000);
         });
     }
 
     /**
-     *
      * @param msg
-     * @returns {Promise.<Message|Message[]>}
+     * @param args
+     * @param fromPattern
+     * @returns {Promise<Message|Message[]>}
      */
-    run(msg, args) {
+    run(msg, args, fromPattern) {
         try {
             this.client.music.seek(msg.guild, args.time.total.seconds, args.time.text)
         } catch (e) {

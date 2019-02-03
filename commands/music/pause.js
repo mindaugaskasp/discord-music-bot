@@ -11,19 +11,19 @@ module.exports = class PauseCommand extends Command {
             examples: ['pause'],
             guildOnly: true,
         });
-        this.client.music.on('pause', async (text, guild) => {
-            let channel = guild.channels.find('type', 'text');
-            if (channel) (await channel.send(text)).delete(12000);
-            else console.log(`No text channel found for guild ${guild.id}/${guild.name} to send event message.`)
+        this.client.music.on('pause', async (text, guild, channel) => {
+            (await channel.send(text)).delete(12000);
         });
     }
 
     /**
      *
      * @param msg
-     * @returns {Promise.<Message|Message[]>}
+     * @param args
+     * @param fromPattern
+     * @returns {Promise<Message|Message[]>}
      */
-    run(msg) {
+    run(msg, args, fromPattern) {
         try {
             this.client.music.pause(msg.guild)
         } catch (e) {

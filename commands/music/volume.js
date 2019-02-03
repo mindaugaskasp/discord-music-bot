@@ -21,18 +21,18 @@ module.exports = class VolumeCommand extends Command {
                 }
             ],
         });
-        this.client.music.on('volume', async (text, guild) => {
-            let channel = guild.channels.find('type', 'text');
-            if (channel) (await channel.send(text)).delete(12000);
-            else console.log(`No text channel found for guild ${guild.id}/${guild.name} to send event message.`)
+        this.client.music.on('volume', async (text, guild, channel) => {
+            (await channel.send(text)).delete(12000);
         });
     }
 
     /**
      * @param msg
+     * @param args
+     * @param fromPattern
      * @returns {Promise.<Message|Message[]>}
      */
-    async run(msg, args) {
+    async run(msg, args, fromPattern) {
         try {
             this.client.music.setVolume(msg.guild, args.volume);
         } catch (e) {

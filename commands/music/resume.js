@@ -11,18 +11,19 @@ module.exports = class ResumeCommand extends Command {
             examples: ['resume'],
             guildOnly: true,
         });
-        this.client.music.on('resume', async (text, guild) => {
-            let channel = guild.channels.find('type', 'text');
-            if (channel) (await channel.send(text)).delete(12000);
-            else console.log(`No text channel found for guild ${guild.id}/${guild.name} to send resume text output`)
+        this.client.music.on('resume', async (text, guild, channel) => {
+            (await channel.send(text)).delete(12000);
         });
     }
 
     /**
+     *
      * @param msg
-     * @returns {Promise.<Message|Message[]>}
+     * @param args
+     * @param fromPattern
+     * @returns {Promise<Message|Message[]>}
      */
-    run(msg) {
+    run(msg, args, fromPattern) {
         try {
             this.client.music.resume(msg.guild)
         } catch (e) {

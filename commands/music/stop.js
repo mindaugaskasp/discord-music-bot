@@ -11,19 +11,19 @@ module.exports = class StopCommand extends Command {
             examples: ['stop'],
             guildOnly: true,
         });
-        this.client.music.on('stop', async (text, guild) => {
-            let channel = guild.channels.find('type', 'text');
-            if (channel) (await channel.send(text)).delete(12000);
-            else console.log(`No text channel found for guild ${guild.id}/${guild.name} to send event message.`)
+        this.client.music.on('stop', async (text, guild, channel) => {
+            (await channel.send(text)).delete(12000);
         });
     }
 
     /**
      *
      * @param msg
+     * @param args
+     * @param fromPattern
      * @returns {Promise.<Message|Message[]>}
      */
-    run(msg) {
+    run(msg, args, fromPattern) {
         try {
             this.client.music.stop(msg.guild)
         } catch (e) {

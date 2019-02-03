@@ -11,7 +11,7 @@ module.exports = class ReadyEvent extends Event
     {
         this.client.on('ready', () => {
             console.log('Logged in!');
-            this.client.user.setGame(this.client.config.bot.game);
+            this.client.user.setActivity(this.client.config.bot.activity_text);
         });
         return this;
     }
