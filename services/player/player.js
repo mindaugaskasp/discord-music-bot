@@ -203,9 +203,15 @@ module.exports = class Player extends EventEmitter
         let queue = this._queue.get(guildID);
         let state = this._state.get(guildID);
 
-        if (!queue) throw 'Can\'t increment queue - map not initialized';
-        if (queue.position >= queue.tracks.length-1 && state.increment_queue === true) queue.queue_end_reached = true;
-        else if (!state || state.increment_queue === true) queue.position+=1;
+        if (!queue) {
+            throw 'Can\'t increment queue - map not initialized';
+        }
+        if (queue.position >= queue.tracks.length-1 && state.increment_queue === true) {
+            queue.queue_end_reached = true;
+        }
+        else if (!state || state.increment_queue === true) {
+            queue.position+=1;
+        }
 
         state.increment_queue = true;
 

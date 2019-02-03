@@ -45,23 +45,30 @@ module.exports = class YoutubePlayer extends Player
             return this.emit('play', 'Music player stopped. No people in voice channel. Disconnecting ...', guild, channel);
         }
 
-        if (timeout && timeout.count > 5) return this.emit('play', 'Music player has shut itself down due to failing to play track(s) for too long. Please make sure your music queue is not corrupted.', guild, channel);
+        if (timeout && timeout.count > 5) {
+            return this.emit('play', 'Music player has shut itself down due to failing to play track(s) for too long. Please make sure your music queue is not corrupted.', guild, channel);
+        }
         if (!state) state = this._initDefaultState(guild.id);
 
         if (!queue || !queue.tracks || queue.tracks.length === 0) return this.emit('play', 'Queue for given guild is empty. Use `get` or `search` command.', guild, channel);
         if (!connection) return this.emit('play', 'Not connected to voice channel for given guild.', guild, channel);
 
-        if (connection.dispatcher && connection.dispatcher.paused) return this.emit('play', 'Music played is paused. Please resume playback or stop it before trying to play it.', guild, channel);
-        else if (connection.dispatcher) connection.dispatcher.destroy('play', 'New dispatcher initialized');
+        if (connection.dispatcher && connection.dispatcher.paused) {
+            return this.emit('play', 'Music played is paused. Please resume playback or stop it before trying to play it.', guild, channel);
+        } else if (connection.dispatcher) {
+            connection.dispatcher.destroy('play', 'New dispatcher initialized');
+        }
 
         if (queue.queue_end_reached === true && state.loop === true) {
-            if (state.shuffle === true) this.shuffle(guild);
+            if (state.shuffle === true) {
+                this.shuffle(guild, channel);
+            }
             this._resetQueuePosition(guild.id);
             queue = this._queue.get(guild.id);
         } else if (queue.queue_end_reached === true && state.loop === false) return this.emit('play', 'Music has finished playing for given guild. Looping is not enabled.', guild, channel);
 
         let track = this._getTrack(queue);
-        let trackTitle = track.title.split(' ').join('-');
+        let trackTitle = track.title.replace(/[ *?!]/gi, '_') + '.mp3';
         let filePath = `${YoutubePlayer.DOWNLOAD_DIR()}`;
         if (fs.existsSync(`${filePath}\\${trackTitle}`) === false) {
             if (!state.seek) {
@@ -78,6 +85,7 @@ module.exports = class YoutubePlayer extends Player
         });
 
         dispatcher.on('end', (reason) => {
+            console.log('dispatcher end reason', reason);
             if (state.stop === false) {
                 this._TryToIncrementQueue(guild.id);
                 return this.play(guild, channel);
@@ -97,7 +105,7 @@ module.exports = class YoutubePlayer extends Player
 
     /**
      * @param guild
-     * @param channel`
+     * @param channel
      */
     shuffle(guild, channel)
     {
@@ -107,8 +115,12 @@ module.exports = class YoutubePlayer extends Player
                 queue.tracks = this._randomizeArray(queue.tracks);
                 this._queue.set(guild.id, queue);
                 this.emit('shuffle', `Music Player has shuffled _${queue.tracks.length}_ records`, guild, channel);
-            } else this.emit('shuffle', 'Music Player could not shuffle tracks - not enough tracks present', guild, channel)
-        } else this.emit('shuffle', 'Music Player could not shuffle track list at the moment.', guild, channel)
+            } else {
+                this.emit('shuffle', 'Music Player could not shuffle tracks - not enough tracks present', guild, channel)
+            }
+        } else {
+            this.emit('shuffle', 'Music Player could not shuffle track list at the moment.', guild, channel)
+        }
     }
 
     /**
