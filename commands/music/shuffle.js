@@ -24,7 +24,7 @@ module.exports = class ShuffleCommand extends Command {
      */
     async run(msg, args, fromPattern) {
         try {
-            this.client.music.shuffle(msg.guild, 'manual');
+            this.client.music.shuffle(msg.guild, 'manual', msg.channel);
         } catch (e) {
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.')

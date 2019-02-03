@@ -32,7 +32,7 @@ module.exports = class RemoveCommand extends Command {
      */
     run(msg, args, fromPattern) {
         try {
-            this.client.music.removeTrack(msg.guild, args.number)
+            this.client.music.removeTrack(msg.guild, args.number, msg.channel)
         } catch (e) {
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.');

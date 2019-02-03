@@ -34,7 +34,7 @@ module.exports = class VolumeCommand extends Command {
      */
     async run(msg, args, fromPattern) {
         try {
-            this.client.music.setVolume(msg.guild, args.volume);
+            this.client.music.setVolume(msg.guild, args.volume, msg.channel);
         } catch (e) {
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.')

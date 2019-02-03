@@ -1,10 +1,11 @@
 # discord-music-bot
-Free, open source repo containing music playback code, clone/fork/contribute as you wish.
+Simplest discord music player bot you ever find, easy to modify and extend, does not contain overhead code and does only what you came for - play music. Free to fork, use and contribute.
+For any issues spotted, open a ticket and I'll look into it asap.
 
 _Out of the box you get_:
 
 * Multiple Guild music playback support
-* Music data storage in sqlite database
+* Music data is kept in memory, thus providing fastest playback available
 * Many useful music player commands including skip, seek, jump, stop etc
 * No functional overhead - you get only what you came for - music playback
 * Docker deployment support

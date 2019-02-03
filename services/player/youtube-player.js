@@ -1,8 +1,12 @@
 const Player = require('./player');
 const Discord = require('discord.js');
+const fs = require('fs');
 
 module.exports = class YoutubePlayer extends Player
 {
+    /**
+     * @param youtube
+     */
     constructor(youtube)
     {
         super(youtube);
@@ -34,17 +38,17 @@ module.exports = class YoutubePlayer extends Player
         let timeout = this._timeouts.get(guild.id);
 
         if (!connection) {
-            return this.emit('play', 'Music player is not connected to any voice channel', guild, channel);
+            return this.emit('play', 'Music player is not connected to any voice channel. Use `join` command.', guild, channel);
         }
         if (connection.channel.members.size === 1) {
             connection.disconnect();
-            return this.emit('play', 'Music player stopped. No people in voice channel. Disconnecting...', guild, channel);
+            return this.emit('play', 'Music player stopped. No people in voice channel. Disconnecting ...', guild, channel);
         }
 
         if (timeout && timeout.count > 5) return this.emit('play', 'Music player has shut itself down due to failing to play track(s) for too long. Please make sure your music queue is not corrupted.', guild, channel);
         if (!state) state = this._initDefaultState(guild.id);
 
-        if (!queue || !queue.tracks || queue.tracks.length === 0) return this.emit('play', 'Queue for given guild is empty.', guild, channel);
+        if (!queue || !queue.tracks || queue.tracks.length === 0) return this.emit('play', 'Queue for given guild is empty. Use `get` or `search` command.', guild, channel);
         if (!connection) return this.emit('play', 'Not connected to voice channel for given guild.', guild, channel);
 
         if (connection.dispatcher && connection.dispatcher.paused) return this.emit('play', 'Music played is paused. Please resume playback or stop it before trying to play it.', guild, channel);
@@ -57,20 +61,26 @@ module.exports = class YoutubePlayer extends Player
         } else if (queue.queue_end_reached === true && state.loop === false) return this.emit('play', 'Music has finished playing for given guild. Looping is not enabled.', guild, channel);
 
         let track = this._getTrack(queue);
-        if (!state.seek) await this._youtube.download(track.url, `${YoutubePlayer.DOWNLOAD_DIR()}/${guild.id}`);
-        let dispatcher = connection.playFile(`${YoutubePlayer.DOWNLOAD_DIR()}/${guild.id}`, {seek: state.seek, volume: state.volume, passes: 2});
+        let trackTitle = track.title.split(' ').join('-');
+        let filePath = `${YoutubePlayer.DOWNLOAD_DIR()}`;
+        if (fs.existsSync(`${filePath}\\${trackTitle}`) === false) {
+            if (!state.seek) {
+                await this._youtube.download(track.url, `${filePath}\\${trackTitle}`);
+            }
+        }
+        let dispatcher = connection.playFile(filePath, {seek: state.seek, volume: state.volume, passes: 2});
 
         dispatcher.on('start', () => {
             state.seek = 0;
             this._state.set(guild.id, state);
             this._timeouts.delete(guild.id);
-            this.emit('playing', track, guild);
+            this.emit('playing', track, guild, channel);
         });
 
         dispatcher.on('end', (reason) => {
             if (state.stop === false) {
                 this._TryToIncrementQueue(guild.id);
-                return this.play(guild);
+                return this.play(guild, channel);
             } else {
                 state.stop = false;
                 this._state.set(guild.id, state);

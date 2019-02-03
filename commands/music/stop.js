@@ -25,7 +25,7 @@ module.exports = class StopCommand extends Command {
      */
     run(msg, args, fromPattern) {
         try {
-            this.client.music.stop(msg.guild)
+            this.client.music.stop(msg.guild, msg.channel)
         } catch (e) {
             console.log(e);
             return msg.say('Something went horribly wrong! Please try again later.');

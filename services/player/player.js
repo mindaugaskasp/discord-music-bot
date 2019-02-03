@@ -53,7 +53,7 @@ module.exports = class Player extends EventEmitter
      * @param guild
      * @param position
      */
-    removeTrack(guild, position)
+    removeTrack(guild, position, channel)
     {
         let queue = this._queue.get(guild.id);
         if (!queue) {
@@ -63,12 +63,12 @@ module.exports = class Player extends EventEmitter
             queue.position = 0;
             queue.tracks = [];
             this._queue.set(guild.id, queue);
-            this.emit('remove', `Removing \`ALL\` tracks from the queue. Total: \`${queue.tracks.length}\``, guild);
+            this.emit('remove', `Removing \`ALL\` tracks from the queue. Total: \`${queue.tracks.length}\``, guild, channel);
         } else {
             if (position-1 >= queue.tracks.length) {
-                return this.emit('remove', `Invalid track number provided. Allowed: 1-${queue.tracks.length}`, guild);
+                return this.emit('remove', `Invalid track number provided. Allowed: 1-${queue.tracks.length}`, guild, channel);
             }
-            this.emit('remove', `Removing \`${queue.tracks[position-1].title}\` from the queue.`, guild);
+            this.emit('remove', `Removing \`${queue.tracks[position-1].title}\` from the queue.`, guild, channel);
             let firstHalf = position - 1 === 0 ? [] : queue.tracks.splice(0, position - 1);
             let secondHalf = queue.tracks.splice(position-1 === 0 ? position : position-1, queue.tracks.length);
             queue.tracks = firstHalf.concat(secondHalf);

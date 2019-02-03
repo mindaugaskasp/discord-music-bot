@@ -48,7 +48,9 @@ module.exports = class PlayCommand extends Command {
     {
         this.client.music.on('playing', async (track, guild, channel) => {
             let playingMessage = this.client.music.messages.get(guild.id);
-            if (playingMessage && playingMessage.deletable) playingMessage.delete();
+            if (playingMessage && playingMessage.deletable) {
+                playingMessage.delete();
+            }
             this.client.music.savePlayerMessage(guild, (await channel.send('', {embed: this.client.music.getInfo(guild)})));
         });
 
