@@ -2,6 +2,9 @@
 Simplest discord music player bot you ever find, easy to modify and extend, does not contain overhead code and does only what you came for - play music. Free to fork, use and contribute.
 For any issues spotted, open a ticket and I'll look into it asap.
 
+For stable ver. clone `master` branch, any other branch are in development and may contain breaking changes. 
+
+
 _Out of the box you get_:
 
 * Multiple Guild music playback support
