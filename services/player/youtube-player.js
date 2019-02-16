@@ -75,7 +75,7 @@ module.exports = class YoutubePlayer extends Player
                 await this._youtube.download(track.url, `${filePath}\\${trackTitle}`);
             }
         }
-        let dispatcher = connection.playFile(filePath, {seek: state.seek, volume: state.volume, passes: 2});
+        let dispatcher = connection.playFile(`${filePath}\\${trackTitle}`, {seek: state.seek, volume: state.volume, passes: 2});
 
         dispatcher.on('start', () => {
             state.seek = 0;
