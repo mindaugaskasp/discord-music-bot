@@ -1,6 +1,8 @@
 const Player = require('./player');
 const Discord = require('discord.js');
 const fs = require('fs');
+const path = require("path");
+const crypto = require("crypto");
 
 module.exports = class YoutubePlayer extends Player
 {
@@ -69,13 +71,17 @@ module.exports = class YoutubePlayer extends Player
 
         let track = this._getTrack(queue);
         let trackTitle = track.title.replace(/[ *?!]/gi, '_') + '.mp3';
+        const hash = crypto.createHash('sha256');
+        hash.update(trackTitle);
+        const trackTitleHash = hash.digest('hex');
         let filePath = `${YoutubePlayer.DOWNLOAD_DIR()}`;
-        if (fs.existsSync(`${filePath}\\${trackTitle}`) === false) {
+        const pathAndFilename = path.join(filePath, trackTitleHash);
+        if (fs.existsSync(pathAndFilename) === false) {
             if (!state.seek) {
-                await this._youtube.download(track.url, `${filePath}\\${trackTitle}`);
+                await this._youtube.download(track.url, pathAndFilename);
             }
         }
-        let dispatcher = connection.playFile(`${filePath}\\${trackTitle}`, {seek: state.seek, volume: state.volume, passes: 2});
+        let dispatcher = connection.playFile(pathAndFilename, {seek: state.seek, volume: state.volume, passes: 2});
 
         dispatcher.on('start', () => {
             state.seek = 0;
