@@ -1,12 +1,12 @@
 version: '2'
 services:
     server:
-      container_name: discord_music_server
+      container_name: discord_server
       build:
         context: .
         dockerfile: ./Dockerfile
       ports:
         - 8060:8080
       volumes:
-        - ./:/usr/src/app
+        - ./app
       restart: always

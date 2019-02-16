@@ -2,6 +2,9 @@
 Simplest discord music player bot you ever find, easy to modify and extend, does not contain overhead code and does only what you came for - play music. Free to fork, use and contribute.
 For any issues spotted, open a ticket and I'll look into it asap.
 
+For stable ver. clone `master` branch, any other branch are in development and may contain breaking changes. 
+
+
 _Out of the box you get_:
 
 * Multiple Guild music playback support
@@ -20,10 +23,11 @@ _Out of the box you get_:
 2. Clone repository if you haven't done so yet `git clone https://github.com/mindaugaskasp/discord-music-bot.git` or just download it as a ZIP
 3. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio etc)
 4. Open terminal and change your working directory to project root
-5. Run `npm install discord.js-commando`
-6. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID of the application whose token you've set in `app.json` file
-7. Confirm that application has started without any errors (look for `Logged In!` text in terminal)
-8. Use command `<prefix>help` in your discord guild text channel to view available commands
+5. Run `npm install` to install project dependencies
+6. Run `npm run prod` or `npm run debug` 
+7. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID of the application whose token you've set in `app.json` file
+8. Confirm that application has started without any errors (look for `Logged In!` text in terminal)
+9. Use command `<prefix>help` in your discord guild text channel to view available commands
 
 ## How to Use - Docker
 
