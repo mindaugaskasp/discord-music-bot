@@ -3,7 +3,6 @@
     "name": "Xayah",
     "token": "",
     "owners": [
-      "discord-id-here"
     ],
     "delete_cmd_messages": true,
     "default_cmd_prefix": ".",
