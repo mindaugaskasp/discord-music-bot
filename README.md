@@ -1,4 +1,5 @@
 # discord-music-bot
+NOT IN ACTIVE DEVELOPMENT AND MAY CONTAIN ISSUES & BUGS
 
 Music bot for Discord voip app, contains only music playback code and no other unnecessary overhead code. Free to fork and/or contribute.
 
