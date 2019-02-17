@@ -19,7 +19,7 @@ Any bug reports or security concerns are very welcomed, please, open a ticket an
 ## Docker set up guide
 
 1. Configure your app like described in general set up guide
-2. Run `docker-compuse up --build` to build and run your container
+2. Run `docker-compose up --build` to build and run your container
 
 
 ## Available commands
