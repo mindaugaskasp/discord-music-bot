@@ -8,5 +8,5 @@ services:
       ports:
         - 8060:8080
       volumes:
-        - ./:/app
+        - ./:/usr/src/app
       restart: always
