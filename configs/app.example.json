@@ -1,0 +1,16 @@
+{
+  "bot": {
+    "name": "Xayah",
+    "token": "",
+    "owners": [
+      "discord-id-here"
+    ],
+    "delete_cmd_messages": true,
+    "default_cmd_prefix": ".",
+    "activity_text": "use .help command"
+  },
+  "youtube": {
+    "token": "",
+    "base_url": "https://www.youtube.com"
+  }
+}
