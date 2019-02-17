@@ -21,22 +21,24 @@ _Out of the box you get_:
 
 1. Install Node.js (8.6 ver or newer) & NPM package manager for your machine (usually installs together with node)
 2. Clone repository if you haven't done so yet `git clone https://github.com/mindaugaskasp/discord-music-bot.git` or just download it as a ZIP
-3. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio etc)
-4. Open terminal and change your working directory to project root
-5. Run `npm install` to install project dependencies
-6. Run `npm run prod` or `npm run debug` 
-7. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID of the application whose token you've set in `app.json` file
-8. Confirm that application has started without any errors (look for `Logged In!` text in terminal)
-9. Use command `<prefix>help` in your discord guild text channel to view available commands
+3. Create `configs/app.json` file from given `app.example.json`
+4. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio etc)
+5. Open terminal and change your working directory to project root
+6. Run `npm install` to install project dependencies
+7. Run `npm run prod` or `npm run debug` 
+8. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID of the application whose token you've set in `app.json` file
+9. Confirm that application has started without any errors (look for `Logged In!` text in terminal)
+10. Use command `<prefix>help` in your discord guild text channel to view available commands
 
 ## How to Use - Docker
 
 1. Install Docker & Docker Compose for your machine
 2. Clone or download repository as ZIP and change your terminal working directory to project root
-3. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio log in details etc)
-4. Run `docker-compose run --build` in terminal to build image & run container. If you see `Logged In!` in terminal window. Your bot has started without any problems.
-5. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID of the application whose token you've set in `app.json` file.
-6. Use command `<prefix>help` in your discord guild text channel to view available commands
+3. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio etc)
+4. Set up configuration data in `configs/app.json` file (youtube API token, Discord Application token, Owner ID(s), listen-moe radio log in details etc)
+5. Run `docker-compose run --build` in terminal to build image & run container. If you see `Logged In!` in terminal window. Your bot has started without any problems.
+6. Add bot to your discord guild by using link `https://discordapp.com/oauth2/authorize?client_id=<ClientID>&permissions=0&scope=bot`, where `<clientID>` is your Discord Application client ID of the application whose token you've set in `app.json` file.
+7 Use command `<prefix>help` in your discord guild text channel to view available commands
 
 ## Available commands
 
