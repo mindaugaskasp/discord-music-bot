@@ -1,6 +1,8 @@
 const Player = require('./player');
 const Discord = require('discord.js');
 const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 
 module.exports = class YoutubePlayer extends Player
 {
@@ -36,6 +38,7 @@ module.exports = class YoutubePlayer extends Player
         let connection = guild.voiceConnection;
         let state = this._state.get(guild.id);
         let timeout = this._timeouts.get(guild.id);
+        let trackDirectory = `${YoutubePlayer.DOWNLOAD_DIR()}`;
 
         if (!connection) {
             return this.emit('play', 'Music player is not connected to any voice channel. Use `join` command.', guild, channel);
@@ -68,14 +71,17 @@ module.exports = class YoutubePlayer extends Player
         } else if (queue.queue_end_reached === true && state.loop === false) return this.emit('play', 'Music has finished playing for given guild. Looping is not enabled.', guild, channel);
 
         let track = this._getTrack(queue);
-        let trackTitle = track.title.replace(/[ *?!]/gi, '_') + '.mp3';
-        let filePath = `${YoutubePlayer.DOWNLOAD_DIR()}`;
-        if (fs.existsSync(`${filePath}\\${trackTitle}`) === false) {
+        const hash = crypto.createHash('sha256');
+        hash.update(track.title);
+        const trackTitleHash = hash.digest('hex') + '.mp3';
+        const fullAudioPath = path.join(trackDirectory, trackTitleHash);
+
+        if (fs.existsSync(fullAudioPath === false)) {
             if (!state.seek) {
-                await this._youtube.download(track.url, `${filePath}\\${trackTitle}`);
+                await this._youtube.download(track.url, fullAudioPath);
             }
         }
-        let dispatcher = connection.playFile(`${filePath}\\${trackTitle}`, {seek: state.seek, volume: state.volume, passes: 2});
+        let dispatcher = connection.playFile(fullAudioPath, {seek: state.seek, volume: state.volume, passes: 2});
 
         dispatcher.on('start', () => {
             state.seek = 0;

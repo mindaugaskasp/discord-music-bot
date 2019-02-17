@@ -64,6 +64,6 @@ typings/
 .downloads
 
 $config files
-/configs/*
+/configs
 package-lock.json
 downloads
