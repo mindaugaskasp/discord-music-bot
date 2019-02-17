@@ -38,7 +38,6 @@ module.exports = class YoutubePlayer extends Player
         let connection = guild.voiceConnection;
         let state = this._state.get(guild.id);
         let timeout = this._timeouts.get(guild.id);
-        let trackDirectory = `${YoutubePlayer.DOWNLOAD_DIR()}`;
 
         if (!connection) {
             return this.emit('play', 'Music player is not connected to any voice channel. Use `join` command.', guild, channel);
@@ -70,11 +69,15 @@ module.exports = class YoutubePlayer extends Player
             queue = this._queue.get(guild.id);
         } else if (queue.queue_end_reached === true && state.loop === false) return this.emit('play', 'Music has finished playing for given guild. Looping is not enabled.', guild, channel);
 
+        // some youtube tracks may contain interesting utf characters
+        // we hash the track title to avoid unnecessary bullshit like that
+        // when saving the audio file and streaming/reading it
         let track = this._getTrack(queue);
         const hash = crypto.createHash('sha256');
         hash.update(track.title);
+
         const trackTitleHash = hash.digest('hex') + '.mp3';
-        const fullAudioPath = path.join(trackDirectory, trackTitleHash);
+        const fullAudioPath = path.join(YoutubePlayer.DOWNLOAD_DIR,trackTitleHash);
 
         if (fs.existsSync(fullAudioPath === false)) {
             if (!state.seek) {
@@ -82,7 +85,6 @@ module.exports = class YoutubePlayer extends Player
             }
         }
         let dispatcher = connection.playFile(fullAudioPath, {seek: state.seek, volume: state.volume, passes: 2});
-
         dispatcher.on('start', () => {
             state.seek = 0;
             this._state.set(guild.id, state);
@@ -93,7 +95,7 @@ module.exports = class YoutubePlayer extends Player
         dispatcher.on('end', (reason) => {
             console.log('dispatcher end reason', reason);
             if (state.stop === false) {
-                this._TryToIncrementQueue(guild.id);
+                this._tryToIncrementQueue(guild.id);
                 return this.play(guild, channel);
             } else {
                 state.stop = false;
@@ -104,7 +106,7 @@ module.exports = class YoutubePlayer extends Player
         dispatcher.on('error', e => {
             console.log('error', e);
             this._incrementTimeout(guild.id);
-            this._TryToIncrementQueue(guild.id);
+            this._tryToIncrementQueue(guild.id);
             return this.emit('play', `Music player encountered an error trying to play \`${track.title}\`.`, guild, channel);
         });
     }

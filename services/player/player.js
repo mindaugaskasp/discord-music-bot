@@ -198,7 +198,7 @@ module.exports = class Player extends EventEmitter
      * @param guildID
      * @private
      */
-    _TryToIncrementQueue(guildID)
+    _tryToIncrementQueue(guildID)
     {
         let queue = this._queue.get(guildID);
         let state = this._state.get(guildID);
