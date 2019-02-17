@@ -1,6 +1,6 @@
 const { CommandoClient, SQLiteProvider } = require('discord.js-commando');
 const path = require('path');
-const config = require('./configs/app.example.json');
+const config = require('./configs/app.json');
 const YoutubePlayer = require('./services/player/youtube-player');
 const sqlite = require('sqlite');
 const TimeArgumentType = require('./arguments/time-argument');
