@@ -10,11 +10,9 @@ RUN apt-get update && \
     apt-get install -y build-essential ffmpeg python && \
     apt-get autoremove -y
 
-# Bundle app source
-COPY . /app
-
-WORKDIR /app
-
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY . /usr/src/app
 RUN npm install
 
 CMD [ "npm", "run", "prod"]

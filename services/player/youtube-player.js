@@ -77,15 +77,16 @@ module.exports = class YoutubePlayer extends Player
         hash.update(track.title);
 
         const trackTitleHash = hash.digest('hex') + '.mp3';
-        const fullAudioPath = path.join(YoutubePlayer.DOWNLOAD_DIR,trackTitleHash);
+        const fullAudioPath = path.join(YoutubePlayer.DOWNLOAD_DIR(), trackTitleHash);
 
-        if (fs.existsSync(fullAudioPath === false)) {
+        if (fs.existsSync(fullAudioPath) === false) {
             if (!state.seek) {
                 await this._youtube.download(track.url, fullAudioPath);
             }
         }
         let dispatcher = connection.playFile(fullAudioPath, {seek: state.seek, volume: state.volume, passes: 2});
         dispatcher.on('start', () => {
+            console.log('Playing', trackTitleHash);
             state.seek = 0;
             this._state.set(guild.id, state);
             this._timeouts.delete(guild.id);

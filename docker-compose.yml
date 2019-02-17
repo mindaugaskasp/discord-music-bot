@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
     server:
       container_name: discord_server
@@ -8,5 +8,5 @@ services:
       ports:
         - 8060:8080
       volumes:
-        - ./app
+        - ./:/app
       restart: always
