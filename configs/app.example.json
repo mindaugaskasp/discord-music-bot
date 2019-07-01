@@ -1,9 +1,9 @@
 {
   "bot": {
-    "name": "Xayah",
-    "token": "NTY5MjQ2MDQzOTcyMTczODM0.XLt2GA.rFZspWrpMnj3o7VQx3uMTYC8fvc",
+    "name": "Abdou",
+    "token": "NTIzMTk0NzU2OTE5MDY2NjI2.XRnEAQ.N7SZL_oCF653uIA5V7PKrvoQ8uU",
     "owners": [
-      "discord-id-here"
+      "461468630773661699"
     ],
     "delete_cmd_messages": true,
     "default_cmd_prefix": ".",
